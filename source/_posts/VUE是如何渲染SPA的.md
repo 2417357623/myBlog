@@ -1,9 +1,9 @@
 ---
-title: VUE是如何渲染SPA的
+title: VUE是如何渲染SFC的
 date: 2024-09-28 13:35:52
 tags:   
   - Vue
-  - SPA
+  - SFC
   - 渲染原理
   - 前端开发
 ---
