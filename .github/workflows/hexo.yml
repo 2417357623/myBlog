@@ -22,8 +22,9 @@ jobs:
       - name: Install dependencies
         run: npm ci  # 使用 ci 安装依赖，确保干净安装
 
-      - name: Create highlight_alias.json
-        run: touch highlight_alias.json  # 显式创建文件，避免权限问题
+      - name: Ensure write permissions
+        run: |
+          sudo chmod -R 777 .  # 递归更改当前目录及其内容的权限为可读写执行
 
       - name: Build Hexo
         run: npm run build  # 构建 Hexo 项目
