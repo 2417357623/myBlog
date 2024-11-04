@@ -104,4 +104,5 @@ deploy:
     type: git
     repository: https://github.com/2417357623/pinaShooter.github.io.git
     branch: main
+    token: $GB_TOKEN
 
