@@ -15,6 +15,11 @@ jobs:
       uses: actions/setup-node@v4.1.0
       with:
         node-version: v18.16.0
+    - name: Install dependencies
+      run: npm install  # 安装项目依赖
+
+    - name: Build Hexo
+      run: npm run build  # 构建 Hexo 项目       
     
     # Deploy hexo blog website.
     - name: Deploy
