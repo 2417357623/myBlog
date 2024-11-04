@@ -102,7 +102,6 @@ theme: redefine
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
     type: git
-    repository: https://github.com/2417357623/pinaShooter.github.io.git
-    branch: main
-    token: $GH_TOKEN
+    repository: https://github.com/2417357623/myBlog.git
+    branch: gh-pages
 
