@@ -23,13 +23,11 @@ jobs:
     
     # Deploy hexo blog website.
     - name: Deploy
-      id: deploy
-      uses: sma11black/hexo-action@v1.0.3
-      with:
-        deploy_key: ${{ secrets.GH_TOKEN }}
-        user_name: 2417357623  # (or delete this input setting to use bot account)
-        user_email: 2417357623@qq.com  # (or delete this input setting to use bot account)
-    # Use the output from the `deploy` step(use for test action)
-    - name: Get the output
-      run: |
-        echo "${{ steps.deploy.outputs.notify }}"
+      env:  # 设置环境变量
+       GB_TOKEN: ${{ secrets.GB_TOKEN }}  # 使用 GitHub Secrets 存储的 GB_TOKEN
+      run:
+       git config --global user.name "2417357623"
+       git config --global user.email "2417357623@qq.com"
+       npm run deploy
+       
+      
