@@ -1,4 +1,4 @@
-name: Deploy Hexo to GitHub Pages
+name: Deploy Hexo to GitHub Pages1
 
 on:
   push:
