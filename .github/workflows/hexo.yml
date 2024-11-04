@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: v18.16.0
+
+      - name: Install dependencies
+        run: npm ci  # 使用 ci 安装依赖，确保干净安装
+
+      - name: Build Hexo
+        run: npm run build  # 构建 Hexo 项目，确保生成静态文件
+
+      - name: Deploy
+        id: deploy
+        uses: sma11black/hexo-action@v1.0.3
+        with:
+          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          user_name: 2417357623
+          user_email: 2417357623@qq.com
+
+      - name: Get the output
+        run: |
+          echo "${{ steps.deploy.outputs.notify }}"
+
