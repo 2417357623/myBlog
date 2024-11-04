@@ -3,7 +3,7 @@ name: Deploy Hexo to GitHub Pages
 on:
   push:
     branches:
-      - main  # 当推送到 main 分支时触发
+      - master  # 当推送到 main 分支时触发
 
 jobs:
   build:
@@ -46,5 +46,5 @@ jobs:
           git init
           git add -A
           git commit -m "Create by workflows"
-          git remote add origin https://${{ secrets.GH_TOKEN }}@github.com/yourusername/your-repo.git
+          git remote add origin https://${{ secrets.GH_TOKEN }}@github.com/2417357623/myBlog.git
           git push origin HEAD:gh-pages -f
