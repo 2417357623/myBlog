@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Hexo + github action 实现自动化部署</title>
+    <url>/myBlog/2024/11/05/Hexo-git-acition-%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>首先需要一个可以 build 的 hexo 项目，确保在本地实现 <code>npm run build</code> 指令。</p>
+<h2 id="为什么选择-git-action-git-pages-模式"><a href="#为什么选择-git-action-git-pages-模式" class="headerlink" title="为什么选择 git action + git pages 模式"></a>为什么选择 git action + git pages 模式</h2><p>Git action 不仅仅是一个 CI&#x2F;CD 平台，更是一个自动化工作流的平台。他很好的兼容了 github 的功能，除了常规的 ci&#x2F;cd 流程的兼容，还可以对用户的 issue，贡献者参与等事件都做出反应，之后开始配置过的工作流。<br>除此之外，github 还提供了静态资源托管服务 git pages，相当于给我们了一个服务器来部署一个人人都可以访问的站点，这样我们就<strong>无需购买配置服务器</strong>。<br>同时GitHub Pages 在你手动推送新代码到配置的分支（如 main、master 或 gh-pages）时，会<strong>自动重新构建并发布</strong>你的静态网站。这也就意味着我们只需要将 build 的文件发送到项目任意分支就可以。</p>
+<p>我们可以在如下标识处找到这两个功能入口</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/myBlog/attachment/Pasted%20image%2020241105103438.png"
+                     
+                ></p>
+<h2 id="让我们开始吧"><a href="#让我们开始吧" class="headerlink" title="让我们开始吧"></a>让我们开始吧</h2><p>来到 setting，配置 github api 的 token，以授权访问我们的 github repo。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/myBlog/attachment/Pasted%20image%2020241105112250.png"
+                     
+                ></p>
+<p>再来到仓库的 setting 下把 token 配置进去<br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/myBlog/attachment/Pasted%20image%2020241105112403.png"
+                     
+                ></p>
+<p>这样我们的 actions 就不用去输入明文密码来执行自动化任务了，相应的会使用我们配置的名称来进行身份验证。</p>
+<p>接着来到 action 底下新建第一条工作流</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/myBlog/attachment/Pasted%20image%2020241105112620.png"
+                     
+                ></p>
+<p>Yml 文件里面是我们的工作流配置，包括触发事件，工作流程，复制粘贴我的配置，并且修改里面的仓库地址，node 版本。做你想要的修改。然后提交文档</p>
+<pre><code class="yml">name: Deploy Hexo to GitHub Pages1
+
+on:
+  push:
+    branches:
+      - master  # 当推送到 main 分支时触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+</code></pre>
+]]></content>
+      <tags>
+        <tag>hexo</tag>
+        <tag>github action</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>VUE是如何渲染SFC的</title>
+    <url>/myBlog/2024/09/28/VUE%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93SPA%E7%9A%84/</url>
+    <content><![CDATA[<h2 id="涉及到的知识面"><a href="#涉及到的知识面" class="headerlink" title="涉及到的知识面"></a>涉及到的知识面</h2><p>正则表达式，数据劫持，虚拟 DOM</p>
+<h2 id="简易流程加虚拟-DOM"><a href="#简易流程加虚拟-DOM" class="headerlink" title="简易流程加虚拟 DOM"></a>简易流程加虚拟 DOM</h2><p>为了可以介绍清楚整个转化流程，我将拿一个简单地 <code>.vue</code> 文件举例子，并把整个渲染流程代码逐个拆分到每个步骤中去。这个例子会涉及响应式和虚拟 DOM。</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;h1&gt;&#123;&#123; title &#125;&#125;&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;&#123;&#123; content &#125;&#125;&lt;/p&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">            title: &quot;this is title&quot;,</span><br><span class="line">            content: &quot;this is Content&quot;,</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="SFC转为JS"><a href="#SFC转为JS" class="headerlink" title="SFC转为JS"></a>SFC转为JS</h3><p>由于浏览器只能识别 <code>http | js | css</code>  文件，所以 <code>vite</code> 官方 提供一个<code>@vitejs/plugin-vue</code> 组件，可以把这个插件想象成编译器，把 <code>.vue</code> 文件转化为 <code>.js</code>文件。为了更好的探究实现过程，我决定手写，这时候就涉及到读取vue文件，把内容转为字符串输出。</p>
+<p>早期，浏览器是一个沙盒，它不允许我们操作本地文件，通常都是后端处理，前端使用 <code>fetch</code> API 或 <code>XMLHttpRequest</code> 来发送请求到后端拿到数据。浏览器只允许同源的Ajax操作，如果跨域，就必须使用CORS权限。<br>除此之外，还有纯前端操作文件的方法。参考<a class="link"   href="https://blog.csdn.net/xgangzai/article/details/129605068" ># 使用File System Access API让浏览器拥有操作本地文件的能力<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>。<br>纯前端方法不是很流行，所以我不做研究。</p>
+<p>利用 <code>webpack</code> ，相当于是后端的处理方式，由于 <code>webpack</code> 运行在 <code>Nodejs</code> 上，所以webpack内部在编译的过程帮我们处理了读取文件的步骤，我们只需配置一个loader，参数是从目标文件拿到的字符串信息，返回一个字符串webpack会生成对应的js文件。在loader中编写我们的处理逻辑。</p>
+<p>以下手写webpack-loader ，模拟了<code>@vitejs/plugin-vue</code>的编译功能，把vue转化为了js。</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> regTemplate = <span class="regexp">/\&lt;template\&gt;(.+?)\&lt;\/template\&gt;/</span></span><br><span class="line"><span class="keyword">const</span> regScript = <span class="regexp">/\&lt;script\&gt;(.+?)\&lt;\/script\&gt;/</span></span><br><span class="line"><span class="keyword">const</span> regFirstSign = <span class="regexp">/(&#123;)/</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="keyword">function</span> (<span class="params">source</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> _source = source.<span class="title function_">replace</span>(<span class="regexp">/[\r\n]/g</span>,<span class="string">&#x27;&#x27;</span>)  </span><br><span class="line">      <span class="keyword">const</span> template = _source.<span class="title function_">match</span>(regTemplate)[<span class="number">1</span>]</span><br><span class="line">      <span class="keyword">const</span> script = _source.<span class="title function_">match</span>(regScript)[<span class="number">1</span>]</span><br><span class="line">      <span class="keyword">const</span> finalScript = script.<span class="title function_">replace</span>(regFirstSign, <span class="string">&#x27;$1 template:&#x27;</span> + <span class="string">&#x27;`&#x27;</span> + template + <span class="string">&#x27;`&#x27;</span> + <span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(finalScript)</span><br><span class="line">      <span class="keyword">return</span> finalScript</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//finalScript like this </span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123; <span class="attr">template</span>:<span class="string">`    &lt;h1&gt;&#123;&#123; title &#125;&#125;&lt;/h1&gt;    &lt;p&gt;&#123;&#123; content &#125;&#125;&lt;/p&gt;`</span>,    <span class="title function_">data</span>(<span class="params"></span>) &#123;        <span class="keyword">return</span> &#123;            <span class="attr">title</span>: <span class="string">&quot;this is </span></span><br><span class="line"><span class="string">title&quot;</span>,            <span class="attr">content</span>: <span class="string">&quot;this is Content&quot;</span>,        &#125;    &#125;&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<h3 id="template模板分析，编译"><a href="#template模板分析，编译" class="headerlink" title="template模板分析，编译"></a>template模板分析，编译</h3><p>template分为标签，属性，内容。</p>
+<ul>
+<li>标签有可能是原生的html，也有可能是组件</li>
+<li>属性也有可能是vue框架属性，自定义属性<br>vue会对这些模板做过滤，生成AST树。</li>
+</ul>
+<p>首先把文件里的template和data解构出来</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App.vue&#x27;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">App</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//解构出被loader处理过的App.js</span></span><br><span class="line"><span class="keyword">const</span> &#123;template,<span class="attr">data</span>: generate &#125; = <span class="title class_">App</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> data  = <span class="title function_">reactive</span>(<span class="title function_">generate</span>())</span><br></pre></td></tr></table></figure></div>
+
+<p>然后对模板进行分析编译，编译包括匹配每个标签和内容，然后生成虚拟的DOM。</p>
+<blockquote>
+<p>这里是一个简易版本，只针对原生标签的innerHtml做了分析。这个 innerHtml 也并非表达式。除此之外，也没有 vue 的特殊的事件属性写法</p>
+</blockquote>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> regHtml = <span class="regexp">/\&lt;(.+?)\&gt;\&#123;\&#123;(.+?)\&#125;\&#125;\&lt;\/.+?\&gt;/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">compileTemplate</span> = (<span class="params">template,data</span>)=&gt;&#123;</span><br><span class="line">    <span class="comment">//vDOM原来是对象，这里用数组只是为了展示虚拟节点的思想</span></span><br><span class="line">    <span class="keyword">const</span> vDOM = []</span><br><span class="line">    <span class="keyword">const</span> matched = template.<span class="title function_">match</span>(<span class="keyword">new</span> <span class="title class_">RegExp</span>(regHtml,<span class="string">&quot;ig&quot;</span>))</span><br><span class="line">    matched.<span class="title function_">forEach</span>(<span class="function">(<span class="params">tag,index</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> [,tagName,key] = tag.<span class="title function_">match</span>(<span class="keyword">new</span> <span class="title class_">RegExp</span>(regHtml,<span class="string">&quot;i&quot;</span>))</span><br><span class="line">        </span><br><span class="line">        vDOM[index] = &#123;</span><br><span class="line">            <span class="attr">tag</span>:tagName,</span><br><span class="line">            <span class="attr">children</span>: data[key.<span class="title function_">trim</span>()]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> vDOM</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<h3 id="render虚拟DOM"><a href="#render虚拟DOM" class="headerlink" title="render虚拟DOM"></a>render虚拟DOM</h3><p>初次渲染只需要把虚拟DOM渲染到真实DOM上</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params">app,template,data</span>)=&gt;&#123;</span><br><span class="line">    state.<span class="property">_vDOM</span> = <span class="title function_">compileTemplate</span>(template,data)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> fragment  =  <span class="variable language_">document</span>.<span class="title function_">createDocumentFragment</span>()</span><br><span class="line">    <span class="comment">//只做一层的渲染</span></span><br><span class="line">    state.<span class="property">_vDOM</span>.<span class="title function_">forEach</span>(<span class="function"><span class="params">vnode</span> =&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> &#123;tag,children&#125; = vnode</span><br><span class="line"></span><br><span class="line">        <span class="comment">//并且只做innerText</span></span><br><span class="line">        <span class="keyword">const</span> node = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(tag)</span><br><span class="line">        node.<span class="property">innerText</span> = children</span><br><span class="line"></span><br><span class="line">        fragment.<span class="title function_">appendChild</span>(node)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    app.<span class="title function_">appendChild</span>(fragment)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<h3 id="数据更新，重新渲染"><a href="#数据更新，重新渲染" class="headerlink" title="数据更新，重新渲染"></a>数据更新，重新渲染</h3><p>当数据更新，我们如何追踪这种变化？es6的proxy给了我们答案，通过一种数据劫持的方案，我们可以检测到数据变化，并且做一些额外的（更新视图）的动作。<br>以下是proxy ，set的handler的实现。<br>当数据变更时，我们会根据新的data重新编译模板，获取新的虚拟DOM，通过比较新老虚拟DOM，获取发生变化的虚拟DOM，并在真实DOM上重新渲染这部分的值。</p>
+<blockquote>
+<p>这种比较涉及了diff算法，这里没有去实现</p>
+</blockquote>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">update</span> = (<span class="params">template,vDOM,data,value</span>)=&gt;&#123;</span><br><span class="line">    <span class="keyword">const</span> newVDOM = <span class="title function_">compileTemplate</span>(template,data)</span><br><span class="line"></span><br><span class="line">    newVDOM.<span class="title function_">forEach</span>( <span class="function">(<span class="params">vnode,index</span>) =&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(vnode.<span class="property">children</span> !== vDOM[index].<span class="property">children</span>)&#123;</span><br><span class="line">            <span class="title function_">patch</span>(value,index)</span><br><span class="line">            vDOM.<span class="title function_">splice</span>(<span class="number">0</span>, vDOM.<span class="property">length</span>, ...newVDOM); <span class="comment">// 直接用新内容替换原有内容</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">patch</span> = (<span class="params">value,index</span>)=&gt;&#123;</span><br><span class="line">    <span class="keyword">const</span> childNodes = state.<span class="property">_app</span>.<span class="property">children</span></span><br><span class="line">    childNodes[index].<span class="property">innerText</span> = value</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">createSetter</span> = (<span class="params"></span>)=&gt;&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">set</span> = (<span class="params">target,key,value,receiver</span>) =&gt;&#123;</span><br><span class="line">        <span class="keyword">const</span> oldValue = target[key]</span><br><span class="line">        <span class="comment">//一旦执行这一句，那么target的值立马会发生变化，也就是说，下面的代码的target会立马变成新的值。所以update的参数将会是更新后的data</span></span><br><span class="line">        <span class="keyword">const</span> res = <span class="title class_">Reflect</span>.<span class="title function_">set</span>(target,key,value,receiver)</span><br><span class="line">        <span class="keyword">if</span>(!<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">hasOwnProperty</span>.<span class="title function_">call</span>(target,key))&#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;响应式新增&quot;</span>, + value)</span><br><span class="line">            <span class="title function_">update</span>(state.<span class="property">_template</span>,state.<span class="property">_vDOM</span>,state.<span class="property">_data</span>,value)</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(value !== oldValue)&#123;</span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;响应式修改&quot;</span>, key + <span class="string">&quot; = &quot;</span> +  value)</span><br><span class="line">                <span class="title function_">update</span>(state.<span class="property">_template</span>,state.<span class="property">_vDOM</span>,state.<span class="property">_data</span>,value)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> set</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> get = <span class="title function_">createGetter</span>()</span><br><span class="line"><span class="keyword">const</span> set = <span class="title function_">createSetter</span>()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mutableHandler = &#123;</span><br><span class="line">    get,</span><br><span class="line">    set</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="流程小结"><a href="#流程小结" class="headerlink" title="流程小结"></a>流程小结</h3><p> 我们需要拆分一下概念，整个实现涉及到了 vue 的响应式，和虚拟 DOM。</p>
+<ul>
+<li>响应式，使得开发者不需要手动管理 DOM 的更新，Vue 会根据数据的变化自动重新渲染相关部分，减少了出错的可能性。</li>
+<li>而虚拟 DOM ，避免了 DOM 的频繁更新，提高性能。<br>Vue 的整个流程是可以绕过虚拟 DOM 实现的，接下来我将实现一个更加复杂的 vue 渲染 <code>.vue</code> 文件的流程。</li>
+</ul>
+<h2 id="完整流程"><a href="#完整流程" class="headerlink" title="完整流程"></a>完整流程</h2><p>以上是 vue 的一个简易版本，由于我认识有限，接下来的内容将会不断更新，以便还原整个 vue 文件运行的流程。</p>
+<h3 id="Vue-文件转为-Js-文件"><a href="#Vue-文件转为-Js-文件" class="headerlink" title=".Vue 文件转为. Js 文件"></a>.Vue 文件转为. Js 文件</h3><h3 id="CreateApp-入口函数"><a href="#CreateApp-入口函数" class="headerlink" title="CreateApp 入口函数"></a>CreateApp 入口函数</h3><h3 id="函件加载"><a href="#函件加载" class="headerlink" title="函件加载"></a>函件加载</h3><h2 id="虚拟-DOM"><a href="#虚拟-DOM" class="headerlink" title="虚拟 DOM"></a>虚拟 DOM</h2><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a class="link"   href="https://jonny-wei.github.io/blog/vue/vue/vue-observer.html#%E5%A6%82%E4%BD%95%E4%BE%A6%E6%B5%8B%E6%95%B0%E6%8D%AE%E7%9A%84%E5%8F%98%E5%8C%96" >响应式原理<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   href="https://blog.poetries.top/FE-Interview-Questions/principle-docs/comprehensive/07-%E8%99%9A%E6%8B%9FDOM%EF%BC%88%E4%B8%80%EF%BC%89.html#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF-vdom" >什么是虚拟 DOM<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   href="https://www.bilibili.com/video/BV1L94y1U73p/?spm_id_from=333.788&vd_source=115cedcdb1996c6483fb453252e441e6" ># JS实现『从工程化到Vue』【上机题】<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   href="https://www.bilibili.com/video/BV1mK421v7PH?p=4&vd_source=115cedcdb1996c6483fb453252e441e6" ># 【小野森森】虚拟DOM怎么了？【前端基础】<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>Vue</tag>
+        <tag>SFC</tag>
+        <tag>渲染原理</tag>
+        <tag>前端开发</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>关于修改第三方组件遇到的坑</title>
+    <url>/myBlog/2024/10/15/%E5%85%B3%E4%BA%8E%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BB%84%E4%BB%B6%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该文章解决了针对 vue 的 scoped 情况下的对第三方样式修改问题。<br>介绍了 <code>scoped</code> 的作用<br>介绍了样式穿透的作用<br>总结了三种不同情况修改样式的方法。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>代码遇到 css 样式不生效的问题，部分代码如下</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;el-select </span><br><span class="line">  v-model=&quot;form.poolName&quot; </span><br><span class="line">  placeholder=&quot;请选择资源组&quot; </span><br><span class="line">  style=&quot;width: 100%;&quot;</span><br><span class="line">  popper-class=&quot;custom-dropdown&quot;</span><br><span class="line">&gt;</span><br><span class="line">  &lt;el-option</span><br><span class="line">    v-for=&quot;item in options&quot;</span><br><span class="line">    :key=&quot;item.value&quot;</span><br><span class="line">    :label=&quot;item.label&quot;</span><br><span class="line">    :value=&quot;item.value&quot;</span><br><span class="line">  &gt;&lt;/el-option&gt;</span><br><span class="line">&lt;/el-select&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">	.custom-dropdown &#123;</span><br><span class="line">   width: 400px !important;</span><br><span class="line">   background-color: rgb(226, 21, 21);</span><br><span class="line">   border: 1px solid #ddd;</span><br><span class="line"> &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure></div>
+
+<p><code>popper-class</code> 可以对 <code>select</code> 的下拉框部分设置样式，这是 <code>html</code> 原生的 <code>select</code> 无法做到的。但是当我设置 <code>style 为 scoped</code> 的时候，<code>vue</code> 会把这个样式和这个组件绑定在一起，最终编译完呈现如下效果</p>
+<p>![[Pasted image 20241015145631.png]]<br>![[Pasted image 20241015145600.png]]</p>
+<p>可以看到 <code>el-select</code> 的 <code>class=&quot;custom-dropdown&quot;</code> 加了一个独立属性 <code>data-v</code> ，并且选择器也是自动加上了属性选择变为了类【属性】的形式。<strong>给组件根元素加上特殊属性这就是 <code>scoped</code> 的作用</strong></p>
+<p>但是当我希望这个把这个 <code>custom-dropdown</code> 应用到 <code>popper-class=&quot;custom-dropdown&quot;</code> 的时候，就出现问题，因为这个 popper-class 最后编译解析出来是一个普通的类，这个类的元素并没有加上属性。也就导致我写的样式 <code>custom-dropdown</code> 没有被应用上去，最后在开发者工具上找不到这个样式的选择器</p>
+<p>![[Pasted image 20241015150028.png]]</p>
+<p>他没有被赋予表明是该组件样式的 <code>data-v</code> 所以该样式失效。</p>
+<p>一开始我以为是样式穿透问题，但是加了 <code>deep</code>  也没有用，原因是我选中的类所在的组件根本不是我组件的子组件，<code>option</code> 下拉框 自己另开了一片区域。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>![[Pasted image 20241015170751.png]]</p>
+<p><code>el-select</code> 和 <code>option</code> 不属于一个组件，<code>option</code> 有一个独立的区域独立于 <code>app</code> 之外，也就是他的样式不受 <code>scoped</code> 的限制，一旦用到 <code>data-v</code> 的选择器（也就是我们在 scope 里面写样式），都选择不到 <code>option</code> 的样式。</p>
+<p>最后实现：</p>
+<div class="code-container" data-rel="Css"><figure class="iseeu highlight css"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="selector-class">.custom-dropdown</span> &#123;<span class="attribute">width</span>: <span class="number">1000px</span>;&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>我找到了专属于某个 select 的 option 下拉框区域的 ID。自己在全局的 css 样式中选择了这个专属样式，这才完成对此的修改。</p>
+<h2 id="样式穿透"><a href="#样式穿透" class="headerlink" title="样式穿透"></a>样式穿透</h2><p>前置条件使用了 <code>scoped</code> ，当父组件想修改子组件里面的样式的时候，如果直接写子组件的样式，除了子组件根节点的样式，别的都是识别不到的。</p>
+<p>要加上 <code>:：v-deep</code> 这个时候会给组件的作用域样式 <code>&lt;style scoped&gt;</code> 的每一个深度作用选择器前面的一个选择器单元增加一个属性选择器 <code>[data-v-实例标识]</code> ，示例：假设原选择器为 <code>.cls #id &gt;&gt;&gt; div</code>，则更改后的选择器为 <code>.cls #id[data-v-e0f690c0] div</code>；</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过这个问题，我了解了如何通过开发者工具定位一个 DOM 的样式，并且修改样式。</p>
+<p><strong>以下结论针对 vue 的 scoped。</strong></p>
+<p>如果是子组件的跟样式，直接修改</p>
+<p>如果是子组件里的某个样式，用 <code>::v-deep</code></p>
+<p>如果是特殊的，option 下拉框等，最终 html 呈现不在组件内部，用全局样式和特定选择器修改。</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; ElButton, ElSelect,ElOption &#125; from &#x27;element-plus&#x27;;</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;el-button&gt;Default&lt;/el-button&gt;</span><br><span class="line">    &lt;el-select &gt;</span><br><span class="line">      &lt;el-option&gt;1&lt;/el-option&gt;</span><br><span class="line">      &lt;el-option&gt;2&lt;/el-option&gt;</span><br><span class="line">      &lt;el-option&gt;3&lt;/el-option&gt;</span><br><span class="line">      &lt;el-option&gt;4&lt;/el-option&gt;</span><br><span class="line">    &lt;/el-select&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">  .el-button&#123;</span><br><span class="line">    width: 500px;</span><br><span class="line">    display: block;</span><br><span class="line">  &#125;</span><br><span class="line">  ::v-deep .el-select__caret&#123;</span><br><span class="line">    color: red;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a class="link"   href="https://juejin.cn/post/7023343999909888037" >scoped,deep的原理<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a><br><a class="link"   href="https://bilibili.com/video/BV1Jv41117QN/?spm_id_from=333.337.search-card.all.click&vd_source=115cedcdb1996c6483fb453252e441e6" >样式穿透<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+]]></content>
+      <tags>
+        <tag>样式穿透</tag>
+        <tag>scoped</tag>
+        <tag>第三方组件</tag>
+        <tag>样式修改</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>性能和指标</title>
+    <url>/myBlog/2024/12/03/%E6%80%A7%E8%83%BD%E5%92%8C%E6%8C%87%E6%A0%87/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们首先需要了解整个页面绘制的原理<a href="%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.md">浏览器工作原理</a>，了解各个时间节点浏览器做了什么，针对不同的节点进行优化。</p>
+<h2 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h2><h3 id="渲染时机"><a href="#渲染时机" class="headerlink" title="渲染时机"></a>渲染时机</h3><p>FP：首次绘制时间<br>FCP：FCP 通常意味着浏览器在 DOM 树和 CSSOM 树完成初步构建后，将第一个可见内容渲染到屏幕上。<br>DCL：DCL 对应于整个 HTML 文档被浏览器完全解析的时刻，此时已经生成完整的 DOM 树，但外部资源（如图片和样式表）可能还未完全加载。对应了 <code>DOMContentLoaded</code> 事件<br>L：Load Event 代表的是页面上的所有资源（包括样式表、图片、JavaScript 文件等）都已加载完成，意味着浏览器已经完成了从服务器下载页面的全部资源，并且所有资源都已完全展示。Load 对应的事件是 <code>load</code><br><strong>LCP</strong>： 是衡量用户感知页面主要内容加载的关键指标，它能帮助开发者找到影响页面加载体验的问题。</p>
+<blockquote>
+<p>可以在开发者工具看到他们的耗时</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/myBlog/attachment/Pasted%20image%2020241130115558.png"
+                     
+                ></p>
+<h3 id="Core-Web-Vitals"><a href="#Core-Web-Vitals" class="headerlink" title="Core Web Vitals"></a>Core Web Vitals</h3><p>Web Vitals 是谷歌推出的一项旨在为提供优质网络用户体验的必要质量信号提供统一指导的倡议。</p>
+<p>LCP：同上<br>INP：反映用户在交互时页面响应的延迟，关注用户操作的流畅性。<br>CLS：评估页面布局的稳定性，防止加载中内容“跳动”影响用户体验。</p>
+<h3 id="RAIL-运行时性能模型"><a href="#RAIL-运行时性能模型" class="headerlink" title="RAIL 运行时性能模型"></a>RAIL 运行时性能模型</h3><p>RAIL 是一种以用户为中心的性能模型，为思考性能提供了结构。该模型将用户的体验分解为关键动作（例如，点击、滚动、加载）并帮助您为每个动作定义性能目标。</p>
+<p>RAIL 代表 Web 应用生命周期中的四个不同方面：响应、动画、空闲和加载。用户对每个这些上下文都有不同的性能期望，因此性能目标是基于上下文和用户体验研究如何感知延迟来定义的。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/myBlog/attachment/Pasted%20image%2020241202164449.png"
+                     
+                ></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a class="link"   href="https://web.dev/articles/rail" >rail模型<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>整合现有项目，搭建monorepo</title>
+    <url>/myBlog/2024/11/04/%E6%95%B4%E5%90%88%E7%8E%B0%E6%9C%89%E9%A1%B9%E7%9B%AE%EF%BC%8C%E6%90%AD%E5%BB%BAmonorepo/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我在开发项目或者练习的时候，不喜欢新建仓库，一个个 clone，所以我把所有的项目丢到一个仓库里，这样我可以在不同的项目中反复横跳，方便的修改，并且通过一个 git 请求，上传到 git。但这造成一个问题，也是多包仓库一个共同问题，依赖重复度高，偶然的机会让我接触到 <code>monorepo</code> ，于是打算深入一下，重构一下我的仓库。</p>
+<h2 id="为什么使用-Monorepo"><a href="#为什么使用-Monorepo" class="headerlink" title="为什么使用 Monorepo"></a>为什么使用 Monorepo</h2><ul>
+<li><strong>代码库的可见性</strong>：使用 Monorepo 可以让你轻松查看公司所有的代码库，而不需要去查找和克隆多个不同的仓库。</li>
+<li><strong>一致性</strong>：Monorepo 能保持代码风格和配置的一致性。你可以在多个项目间共享 ESLint 配置、UI 组件库以及设计系统中的 Web 组件、实用工具库和文档。</li>
+<li><strong>依赖管理的优势</strong>：Monorepo 的真正优势在于依赖管理，它可以帮助你直观地查看整个项目的依赖关系图。此外，对于第三方依赖库，它能够在多个应用中去重使用，从而减少重复安装的包。</li>
+<li><strong>持续集成和自动化</strong>：Monorepo 非常适合用于持续集成和自动化流程，因为它可以轻松地一起构建和测试所有项目。</li>
+</ul>
+<blockquote>
+<p>相比之下，Polyrepo 是一种传统的多仓库模式。Polyrepo 需要在不同的项目之间共享代码，通常流程较为复杂。</p>
+</blockquote>
+<h2 id="Monorepo-的常见问题"><a href="#Monorepo-的常见问题" class="headerlink" title="Monorepo 的常见问题"></a>Monorepo 的常见问题</h2><ul>
+<li><strong>构建时间较长</strong>：随着项目规模增大，构建整个 Monorepo 会消耗更多时间。</li>
+<li><strong>编辑器性能问题</strong>：在大型 Monorepo 中，VSCode 可能会因为处理大量的 Git 历史记录而出现卡顿。</li>
+<li><strong>CI&#x2F;CD 速度缓慢</strong>：在持续集成和部署流程中，Monorepo 会占用更多资源，导致速度变慢。</li>
+</ul>
+<p>正因为如此，我们需要合适的工具来优化 Monorepo 的性能。Monorepo 官网定义了一系列构建工具需要遵守的约定，并且比较了市面上流行的 monorepo 构建工具，我们可以选择自己需要的工具。</p>
+<h2 id="Turborepo"><a href="#Turborepo" class="headerlink" title="Turborepo"></a>Turborepo</h2><p>我们这里直接使用工具来搭建第一个 monorepo，而不用原始的手段，这可以很好避免上述的常见问题。<br>Turborepo 是一个优化 Monorepo 工作流的工具。在官网上介绍了多种可以用于 Monorepo 的工具，接下来我会挑选 Turborepo 进行讲解，展示它如何提升 Monorepo 的效率。</p>
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><p>Turborepo 遵循了官网的 monorepo 最佳实践的相关约定，并且将构建速度做了很大提升。</p>
+<h3 id="Workspace-定义"><a href="#Workspace-定义" class="headerlink" title="Workspace 定义"></a>Workspace 定义</h3><p>在 Monorepo 的根目录的 <code>package.json</code> 中定义 <code>workspaces</code>，它会在第一层目录下查找带有 <code>package.json</code> 的文件夹，并将其识别为一个 workspace。</p>
+<h3 id="共享配置"><a href="#共享配置" class="headerlink" title="共享配置"></a>共享配置</h3><p>他可以在 package 文件夹中创建 <code>tailwind.config.js</code> 配置文件包，在别的项目引入。</p>
+<p>For example we want to share a tailwind config. We can generate a tailwind config and a package. Json in file.</p>
+<p>If we need to support both commonJs and ESM ,we need to provide two js files.</p>
+<p>Cjs. Js</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// packages/tailwind-config/tailwind.config.cjs</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">content</span>: [</span><br><span class="line">    <span class="comment">// 其他项目可以在各自配置中重写 content 部分</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">theme</span>: &#123;</span><br><span class="line">    <span class="attr">extend</span>: &#123;</span><br><span class="line">      <span class="attr">colors</span>: &#123;</span><br><span class="line">        <span class="attr">primary</span>: <span class="string">&#x27;#3490dc&#x27;</span>,</span><br><span class="line">        <span class="attr">secondary</span>: <span class="string">&#x27;#ffed4a&#x27;</span>,</span><br><span class="line">        <span class="attr">accent</span>: <span class="string">&#x27;#38c172&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">spacing</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;72&#x27;</span>: <span class="string">&#x27;18rem&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;84&#x27;</span>: <span class="string">&#x27;21rem&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;96&#x27;</span>: <span class="string">&#x27;24rem&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>Esm. Js</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// packages/tailwind-config/tailwind.config.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="attr">content</span>: [</span><br><span class="line">    <span class="comment">// 其他项目可以在各自配置中重写 content 部分</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">theme</span>: &#123;</span><br><span class="line">    <span class="attr">extend</span>: &#123;</span><br><span class="line">      <span class="attr">colors</span>: &#123;</span><br><span class="line">        <span class="attr">primary</span>: <span class="string">&#x27;#3490dc&#x27;</span>,</span><br><span class="line">        <span class="attr">secondary</span>: <span class="string">&#x27;#ffed4a&#x27;</span>,</span><br><span class="line">        <span class="attr">accent</span>: <span class="string">&#x27;#38c172&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">spacing</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;72&#x27;</span>: <span class="string">&#x27;18rem&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;84&#x27;</span>: <span class="string">&#x27;21rem&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;96&#x27;</span>: <span class="string">&#x27;24rem&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>Package. Json</p>
+<div class="code-container" data-rel="Json"><figure class="iseeu highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;@my-monorepo/tailwind-config&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;main&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./tailwind.config.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;exports&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;import&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./tailwind.config.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;require&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./tailwind.config.cjs&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;module&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;license&quot;</span><span class="punctuation">:</span> <span class="string">&quot;MIT&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;files&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;tailwind.config.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;tailwind.config.cjs&quot;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;peerDependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;tailwindcss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^3.0.0&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>Then we can install and use the config in other items. Its pnpm package. Json<br>Below </p>
+<div class="code-container" data-rel="Json"><figure class="iseeu highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;@my-monorepo/tailwind-config&quot;</span><span class="punctuation">:</span> <span class="string">&quot;workspace:*&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;tailwindcss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^3.0.0&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>In the tailwind. Config. Js we can write like . Show a commonjs way to import.</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// apps/app1/tailwind.config.js</span></span><br><span class="line"><span class="keyword">const</span> sharedConfig = <span class="built_in">require</span>(<span class="string">&#x27;@my-monorepo/tailwind-config&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">presets</span>: [sharedConfig],</span><br><span class="line">  <span class="attr">content</span>: [</span><br><span class="line">    <span class="string">&quot;./src/**/*.&#123;js,jsx,ts,tsx&#125;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;./public/index.html&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>全程跟着官网来没什么毛病。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a class="link"   href="https://turbo.build/repo/docs/getting-started" >turbo官网<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   href="https://monorepo.tools/#local-computation-caching" >monorepo 官网<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   href="https://www.youtube.com/watch?v=9iU_IE6vnJ8" >Monorepos - How the Pros Scale Huge Software Projects &#x2F;&#x2F; Turborepo vs Nx<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>浏览器工作原理</title>
+    <url>/myBlog/2024/11/04/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</url>
+    <content><![CDATA[<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h3 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h3><p>进程：就是程序的运行实例，当我们启动一个程序，操作系统会创建一个内存，里面可以有多个线程。<br>线程：负责当前任务中程序的执行</p>
+<p>特点：</p>
+<ul>
+<li>同一个进程的线程数据共享</li>
+<li>一个线程崩溃，整个进程崩溃</li>
+<li>进程关闭后，内存会回收</li>
+<li>不同进程相互隔离，通过IPC通讯</li>
+</ul>
+<h2 id="chrome多进程架构"><a href="#chrome多进程架构" class="headerlink" title="chrome多进程架构"></a>chrome多进程架构</h2><p>chorme架构主要包括了浏览器主进程，网络进程，GPU进程，渲染进程，插件进程，缓存进程。浏览器默认情况下会为每个标签页创建一个进程</p>
+<p>![[浏览器原理]]</p>
+<h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
+<li>浏览器主进程：获取 URL，格式正确会给 URL 加上协议，通过进程间通信发送给网络进程</li>
+<li>网络进程：<ul>
+<li>先查看是否有缓存资源，如果没有就先进行 DNS 解析，将域名转为 ip 地址。如果协议是 HTTPS 那么会建立 TLS 连接，</li>
+<li>然后浏览器构建请求头和请求体向服务器发送请求，服务端返回响应内容。</li>
+<li>SafeBrowsing 对返回站点内容做检查，如果是不安全的就会给与安全提示</li>
+<li>一旦浏览器接受就先解析响应行（可能会有重定向），然后是响应头，如果 content-type 是 <code>text/html</code> 那么就会开启一个渲染进程。<br>每个域名都会开启一个渲染进程，同域名一般只会有一个，这种方式可以避免不同标签页之间数据共享，卡死</li>
+</ul>
+</li>
+<li>渲染进程：<ul>
+<li>通过 IPC 管道接受网络进程响应体的内容，这时候浏览器进入白屏等待渲染进程进行渲染。</li>
+<li>HTML 解析成 DOM 树：当解析器发现非阻塞资源，例如一张图片，浏览器会请求这些资源并且继续解析。当遇到一个 CSS 文件时，解析也可以继续进行，但是对于 <code>&lt;script&gt;</code> 标签（特别是没有 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/async_function"><code>async</code></a> 或者 <code>defer</code> 属性的）会阻塞渲染并停止 HTML 的解析。尽管浏览器的预加载扫描器加速了这个过程，但过多的脚本仍然是一个重要的瓶颈。</li>
+<li>计算样式：处理 CSS 并构建 CSSOM 树</li>
+<li>JavaScript 编译：[[js编译原理]]<blockquote>
+<p>chrome 使用的渲染引擎是 Blink，而 js 引擎是 V 8，渲染引擎在渲染时遇到 js 会去执行代码调用 js 引擎。</p>
+</blockquote>
+</li>
+<li>布局：根据 DOM 树和已经计算好的样式，生成一个布局树。</li>
+<li>分层</li>
+<li>绘制</li>
+<li>合成：<ul>
+<li>主线程完成以上的工作后，将信息传递给合成器线程，将每个图层切分为很多图块，将每个图块发送给栅格线程，每个栅格线程会栅格化图块。</li>
+<li>根据这些信息，合成器线程生成合成器帧传递给浏览器进程，然后给到 GPU，渲染到屏幕上</li>
+</ul>
+</li>
+<li>交互</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>HTML 解析，css 样式解析，js 编译都是在渲染进程的主线程中执行，当重绘和重排比较频繁时，js 执行时间过长，容易造成页面的卡顿。</p>
+</blockquote>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a class="link"   href="https://www.bilibili.com/video/BV1tc41157Va/?spm_id_from=333.337.search-card.all.click&vd_source=115cedcdb1996c6483fb453252e441e6" >浏览器历史和渲染原理<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   href="https://developer.mozilla.org/zh-CN/docs/Web/Performance/How_browsers_work" >MDN：浏览器工作原理<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   href="https://www.bilibili.com/video/BV1x54y1B7RE/?spm_id_from=333.788.recommend_more_video.-1&vd_source=115cedcdb1996c6483fb453252e441e6" >干货】浏览器是如何运作的？<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>聊聊前端缓存</title>
+    <url>/myBlog/2024/10/13/%E8%81%8A%E8%81%8A%E5%89%8D%E7%AB%AF%E7%BC%93%E5%AD%98/</url>
+    <content><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>前端缓存是一个很大的概念，网上的资料写的都是零零散散的，所以我这里把他们做一个知识串联。</p>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><p>按照大类来分可以分为为了资源加载优化的缓存和本地数据存储。<br>比如：CDN 缓存，浏览器缓存，HTTP缓存。本地数据存储</p>
+<blockquote>
+<p><strong>本篇的缓存和本地数据存储是两个不同的概念</strong><br>LocalStorage 并不算缓存，他是前端开发者手动管理的持久性存储，他不参与 HTTP 请求，只在客户端中存储键值对数据，为了存储数据。而浏览器缓存里的本地缓存则是，是浏览器自动管理的资源缓存，为了资源加载优化，保存的是浏览器的静态资源。<br>本地数据存储是用于存储应用程序状态和用户数据的理想选择，而缓存更侧重于提升性能和减少网络请求。</p>
+</blockquote>
+<h2 id="本地存储"><a href="#本地存储" class="headerlink" title="本地存储"></a>本地存储</h2><ul>
+<li>用于存储用户数据，生命周期较长，除非主动清除</li>
+<li>使用 <strong>JavaScript API</strong> 操作</li>
+</ul>
+<h3 id="分类-1"><a href="#分类-1" class="headerlink" title="分类"></a>分类</h3><p>localStorage, sessionStorage, cookie, WebSql, indexedDB</p>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><ul>
+<li>缓存是由 HTTP 头部（Cache-Control 等）控制，也就是属于 http 缓存</li>
+<li>通过缓存策略实现自动管理，</li>
+<li>用于存储静态资源和 API 响应，提升页面性能，但生命周期较短。</li>
+</ul>
+<p>Http 缓存分为强缓存和协商缓存，以下的两个缓存都收到 http 设置的影响。</p>
+<h3 id="浏览器缓存"><a href="#浏览器缓存" class="headerlink" title="浏览器缓存"></a>浏览器缓存</h3><p>HTTP 响应头决定了哪些资源应该缓存、缓存多久，以及是否要每次请求都检查资源的更新。浏览器会根据资源的特性和使用场景，自动决定资源是存储在内存缓存（Memory Cache）还是磁盘缓存（Disk Cache）</p>
+<p>分为：</p>
+<ul>
+<li><strong>内存缓存</strong>（Memory Cache）：短时间保存，浏览器关闭后清空。</li>
+<li><strong>磁盘缓存</strong>（Disk Cache）：长期保存，浏览器重启后仍可使用。</li>
+<li><strong>Service Worker 缓存</strong>：特殊的缓存，供 PWA 使用。</li>
+</ul>
+<h3 id="CDN-缓存"><a href="#CDN-缓存" class="headerlink" title="CDN 缓存"></a>CDN 缓存</h3><p>网页内容分为静态内容和动态内容，就算是静态内容也不是一定用 <code>CDN</code>。源服务器在分发内容的时候，会在 <code>http</code> 响应头增加 <code>cache-control</code>，告诉 <code>CDN</code> 哪些要缓存，缓存多久。<br>但是动态内容，每次 CDN 服务器都要重新向源服务器拿，那这个就没多大的意义了。但是也有解决方案（省略）。</p>
+<p>CDN 负载均衡服务器会监控每个 CDN 服务器的负载情况，来平均分配网络的流量，</p>
+<p>CDN 的确能提升性能，但缓存有效性、用户访问分布、缓存策略配置都会影响它的效果。简单来说：流量高且集中的站点：CDN 缓存效果非常明显，能够减少大量源站请求。流量小且分散的站点：CDN 的效果有限，某些情况下，访问速度甚至不如直接从源站获取快。合理配置缓存策略、TTL、以及区域缓存同步对于提升 CDN 效果至关重要。</p>
+<h2 id="浏览器缓存命中执行顺序"><a href="#浏览器缓存命中执行顺序" class="headerlink" title="浏览器缓存命中执行顺序"></a>浏览器缓存命中执行顺序</h2><ol>
+<li>是否存在内存缓存？<br>└─ 是 → 使用内存缓存<br>└─ 否 → 2. Service Worker 是否可用？<br>└─ 是 → 使用 Service Worker 缓存<br>└─ 否 → 3. 是否存在磁盘缓存？<br>    └─ 是 → 使用磁盘缓存<br>     └─ 否 → 从网络或 CDN 获取资源</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>缓存</tag>
+        <tag>本地存储</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>首次认识函数式编程</title>
+    <url>/myBlog/2024/10/14/%E9%A6%96%E6%AC%A1%E8%AE%A4%E8%AF%86%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/</url>
+    <content><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
+<li>函数式是声明式编程的一种，强调做什么而不是怎么做</li>
+<li>函数式编程是一种将函数视为“一等公民”的编程范式。它强调纯函数、不可变性和避免副作用。程序的逻辑主要通过函数组合完成。</li>
+</ul>
+<h2 id="纯函数"><a href="#纯函数" class="headerlink" title="纯函数"></a>纯函数</h2><p>函数的变量只依赖自身的执行上下文，而不会根据作用域链找别的执行上下文, 这样的函数是外界隔离的，也就是没有副作用的。</p>
+<blockquote>
+<p>副作用是指函数在执行的时候，会影响别人的执行上下文，影响外部的状态。</p>
+</blockquote>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//这个函数不是纯的，因为console是通过全局上下文确定的</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">dem</span>(<span class="params">a,b</span>)&#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(a+b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>这种设计是对代码进行了限制，用自由度换取了后期代码的可维护性。使用纯函数意味着你的函数中<strong>不存在指向不明的 this，不存在对全局变量的引用，不存在对参数的修改</strong></p>
+<h2 id="变量不可变性"><a href="#变量不可变性" class="headerlink" title="变量不可变性"></a>变量不可变性</h2><p>在函数式编程中，不可变性（Immutability）是指：变量一旦创建，就不能被修改。而是通过创建新变量或对象的副本，代替直接修改原变量。这种设计提高了程序的可靠性、可预测性，并避免了共享状态带来的问题。</p>
+<blockquote>
+<p>一旦传入函数的参数是引用类型，那我们必须先进行一次深拷贝。</p>
+</blockquote>
+<h2 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h2><p>higher-order function is a function that either take a function as a argument or returns a function as a result</p>
+<p>Divided to two types : enhancing function, framework function</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//Function : enhancing function </span></span><br><span class="line"><span class="comment">//we can reuse the enhancement logic across multiple functions,we can return a array to do more jobs</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">eat</span> = (<span class="params"></span>)=&gt;&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;eat&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">run</span> = (<span class="params"></span>)=&gt;&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;run&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">count</span> = (<span class="params">func</span>)=&gt;&#123;</span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        <span class="function">(<span class="params">...args</span>) =&gt;</span>&#123;</span><br><span class="line">            <span class="title function_">func</span>(args)</span><br><span class="line">            count++</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="function">() =&gt;</span>&#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(count)</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> [countEat,getCount] = <span class="title function_">count</span>(eat)</span><br><span class="line"><span class="title function_">countEat</span>()</span><br><span class="line"><span class="title function_">countEat</span>()</span><br><span class="line"><span class="title function_">countEat</span>()</span><br><span class="line"><span class="title function_">countEat</span>()</span><br><span class="line"><span class="title function_">getCount</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">//Function : framework function </span></span><br><span class="line"><span class="comment">//facilitate common tasks and abstract away complexity. those functions allow developer to focus on high-level logic without worrying about the underlying implementation</span></span><br><span class="line"><span class="comment">//for example : we use reduce to implement a map</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">myMap</span> = (<span class="params">arr, callback</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> arr.<span class="title function_">reduce</span>(<span class="function">(<span class="params">pre, cur</span>) =&gt;</span> &#123;</span><br><span class="line">        pre.<span class="title function_">push</span>(<span class="title function_">callback</span>(cur));  <span class="comment">// Push the result from callback</span></span><br><span class="line">        <span class="keyword">return</span> pre;  <span class="comment">// Return the accumulator</span></span><br><span class="line">    &#125;, []);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> b = <span class="title function_">myMap</span>(a, <span class="function">(<span class="params">item</span>) =&gt;</span> item * item);  <span class="comment">// Return value directly</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b);  <span class="comment">// [1, 4, 9]</span></span><br></pre></td></tr></table></figure></div>
+
+
+<h2 id="函数组合"><a href="#函数组合" class="headerlink" title="函数组合"></a>函数组合</h2><p>Functions composition refers to combining multiple funcitions such that the output of one function becomes the input of the next.  This can chain the functions together to perform complex transformation in a cleaner and more readable way.</p>
+<p>We can define a function called pipe to implement the functions composition</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//functions composition</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">pipe</span> = (<span class="params">...func</span>)=&gt;&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">input</span> =&gt;</span> &#123;</span><br><span class="line">        func.<span class="title function_">reduce</span>(<span class="function">(<span class="params">pre,cur</span>)=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_">cur</span>(pre)</span><br><span class="line">        &#125;,input)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<h2 id="柯里化"><a href="#柯里化" class="headerlink" title="柯里化"></a>柯里化</h2><p>When a function has two input parameters, the pipe mentioned above cannot use the function as a parameter, because the pipeline has only one entry. At this time, currying is required to convert 1 function with n parameters into n functions with one parameter.</p>
+<p>This makes functions more reusable and allows partial application of arguments.</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//currying </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">curry</span> = (<span class="params">func,arg</span>)=&gt;&#123;</span><br><span class="line">    <span class="keyword">if</span>(!arg)&#123;</span><br><span class="line">        arg = []</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">input</span>) =&gt;</span>&#123;</span><br><span class="line">        arg.<span class="title function_">push</span>(input)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(arg.<span class="property">length</span> &gt;= func.<span class="property">length</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_">func</span>(...arg)</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title function_">curry</span>(func,arg)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>Once your function is currying, then you can fix several arguments util one argument left ,then you can use the curried function as a arguments of pipe.</p>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; curry, pipe, filter, prop &#125; = R;</span><br><span class="line"><span class="comment">// code here</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *  ex1 </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">// :: String -&gt; Number -&gt; Object -&gt; Boolean</span></span><br><span class="line"><span class="keyword">const</span> propLt = <span class="title function_">curry</span>(<span class="function">(<span class="params">p, c</span>) =&gt;</span> R.<span class="title function_">pipe</span>(R.<span class="title function_">prop</span>(p), R.<span class="title function_">lt</span>(R.<span class="property">__</span>, c)));</span><br><span class="line"></span><br><span class="line"><span class="comment">// :: Object -&gt;  Boolean</span></span><br><span class="line"><span class="keyword">const</span> ageUnder18 = <span class="title function_">propLt</span>(<span class="string">&quot;age&quot;</span>, <span class="number">18</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// :: [a] -&gt; b </span></span><br><span class="line"><span class="keyword">const</span> getAgeUnder18 = R.<span class="title function_">pipe</span>(</span><br><span class="line">  R.<span class="title function_">filter</span>(ageUnder18),</span><br><span class="line">  R.<span class="title function_">map</span>(R.<span class="title function_">pickAll</span>([<span class="string">&quot;name&quot;</span>, <span class="string">&quot;age&quot;</span>]))</span><br><span class="line">);</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>前面介绍了很多函数式编程的概念可以总结出函数式编程的优点：</p>
+<ul>
+<li><strong>代码简洁，开发快速</strong>：函数式编程大量使用函数的组合，函数的复用率很高，减少了代码的重复，因此程序比较短，开发速度较快。Paul Graham 在《黑客与画家》一书中写道：同样功能的程序，极端情况下，Lisp 代码的长度可能是 C 代码的二十分之一。</li>
+<li><strong>接近自然语言，易于理解</strong>：函数式编程大量使用声明式代码，基本都是接近自然语言的，加上它没有乱七八糟的循环，判断的嵌套，因此特别易于理解。</li>
+<li>**易于”并发编程”**：函数式编程没有副作用，所以函数式编程不需要考虑“死锁”（Deadlock），所以根本不存在“锁”线程的问题。</li>
+<li><strong>更少的出错概率</strong>：因为每个函数都很小，而且相同输入永远可以得到相同的输出，因此测试很简单，同时函数式编程强调使用纯函数，没有副作用，因此也很少出现奇怪的 Bug。</li>
+</ul>
+<p>因此，如果用一句话来形容函数式编程，应该是：<code>Less code, fewer bugs</code> 。因为写的代码越少，出错的概率就越小。人是最不可靠的，我们应该尽量把工作交给计算机。</p>
+<p>一眼看下来好像函数式可以解决所有的问题，但是实际上，函数式编程也不是什么万能的灵丹妙药。正因为函数式编程有以上特点，所以它天生就有以下缺陷：</p>
+<ul>
+<li><p><strong>性能</strong>：函数式编程相对于指令式编程，性能绝对是一个短板，因为它往往会对一个方法进行过度包装，从而产生上下文切换的性能开销。同时，在 JS 这种非函数式语言中，函数式的方式必然会比直接写语句指令慢（引擎会针对很多指令做特别优化）。就拿原生方法 <code>map</code> 来说，它就要比纯循环语句实现迭代慢 8 倍。</p>
+</li>
+<li><p><strong>资源占用</strong>：在 JS 中为了实现对象状态的不可变，往往会创建新的对象，因此，它对垃圾回收（Garbage Collection）所产生的压力远远超过其他编程方式。这在某些场合会产生十分严重的问题。</p>
+</li>
+<li><p><strong>递归陷阱</strong>：在函数式编程中，为了实现迭代，通常会采用递归操作，为了减少递归的性能开销，我们往往会把递归写成尾递归形式，以便让解析器进行优化。但是众所周知，JS 是不支持尾递归优化的（虽然 ES6 中将尾递归优化作为了一个规范，但是真正实现的少之又少，<a class="link"   href="https://link.juejin.cn/?target=http://kangax.github.io/compat-table/es6/"  title="http://kangax.github.io/compat-table/es6/">传送门<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>）</p>
+</li>
+<li><p>……</p>
+</li>
+</ul>
+<p>因此，在性能要求很严格的场合，函数式编程其实并不是太合适的选择。</p>
+<p>但是换种思路想，软件工程界从来就没有停止过所谓的银弹之争，却也从来没诞生过什么真正的银弹，各种编程语言层出不穷，各种框架日新月异，各种编程范式推陈出新，结果谁也没有真正的替代谁。</p>
+<p>学习函数式编程真正的意义在于：让你意识到在指令式编程，面向对象编程之外，还有一种全新的编程思路，一种用函数的角度去<strong>抽象</strong>问题的思路。学习函数式编程能大大丰富你的武器库，不然，_<strong>当你手中只有一个锤子，你看什么都像钉子</strong>_。</p>
+<p>我们完全可以在日常工作中将函数式编程作为一种辅助手段，在条件允许的前提下，借鉴函数式编程中的思路，例如：</p>
+<ul>
+<li>多使用纯函数减少副作用的影响。</li>
+<li>使用柯里化增加函数适用率。</li>
+<li>使用 Pointfree 编程风格，减少无意义的中间变量，让代码更且可读性。</li>
+<li>……</li>
+</ul>
+<p>最后，还是那句老生常谈的话：</p>
+<blockquote>
+<p>没有最好的，只有最适合的</p>
+</blockquote>
+<p>希望大家在实际项目中，能根据自己的需求选择最适合自己的编程范式，也希望通过学习这种新的编程范式，可以让我们在二进制的世界行走得更加游刃有余。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a class="link"   href="https://juejin.cn/post/6844903936378273799#heading-28" >简明函数式编程<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a><br><a class="link"   href="https://www.bilibili.com/video/BV1Ue41117U8/?spm_id_from=333.337.top_right_bar_window_history.content.click" >雨轩讲函数式编程<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+]]></content>
+      <tags>
+        <tag>函数式编程</tag>
+        <tag>柯里化</tag>
+        <tag>函数组合</tag>
+      </tags>
+  </entry>
+</search>
