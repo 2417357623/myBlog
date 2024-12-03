@@ -207,7 +207,7 @@ navbar:
       icon: fa-regular fa-user
       submenus:
         Me: /about
-        Github: https://github.com/EvanNotFound/hexo-theme-redefine
+        Github: https://github.com/2417357623
         Blog: https://ohevan.com
         Friends: /friends
     # Links: 
