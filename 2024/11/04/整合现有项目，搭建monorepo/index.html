@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="PinaPop">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://2417357623.github.io/myBlog/2024/11/04/整合现有项目，搭建monorepo/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="前言由于我在开发项目或者练习的时候，不喜欢新建仓库，一个个 clone，所以我把所有的项目丢到一个仓库里，这样我可以在不同的项目中反复横跳，方便的修改，并且通过一个 git 请求，上传到 git。但这造成一个问题，也是多包仓库一个共同问题，依赖重复度高，偶然的机会让我接触到 monorepo ，于是打算深入一下，重构一下我的仓库。 为什么使用 Monorepo 代码库的可见性：使用 Monorep">
+<meta property="og:type" content="article">
+<meta property="og:title" content="整合现有项目，搭建monorepo">
+<meta property="og:url" content="https://2417357623.github.io/myBlog/2024/11/04/%E6%95%B4%E5%90%88%E7%8E%B0%E6%9C%89%E9%A1%B9%E7%9B%AE%EF%BC%8C%E6%90%AD%E5%BB%BAmonorepo/index.html">
+<meta property="og:site_name" content="Pina">
+<meta property="og:description" content="前言由于我在开发项目或者练习的时候，不喜欢新建仓库，一个个 clone，所以我把所有的项目丢到一个仓库里，这样我可以在不同的项目中反复横跳，方便的修改，并且通过一个 git 请求，上传到 git。但这造成一个问题，也是多包仓库一个共同问题，依赖重复度高，偶然的机会让我接触到 monorepo ，于是打算深入一下，重构一下我的仓库。 为什么使用 Monorepo 代码库的可见性：使用 Monorep">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-11-04T22:13:12.000Z">
+<meta property="article:modified_time" content="2024-12-30T09:29:38.524Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/myBlog/images/pinaFavicon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/myBlog/images/pinaFavicon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/myBlog/images/pinaFavicon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            整合现有项目，搭建monorepo | PinaPop&#39;s Blog
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/myBlog/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/myBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/myBlog/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/myBlog/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"2417357623.github.io","root":"/myBlog/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"pina is a cat","subtitle":{"text":[],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":"https://github.com/2417357623","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.8.2","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Status":{"path":"https://status.ohevan.com/","icon":"fa-regular fa-chart-bar"},"About":{"icon":"fa-regular fa-user","submenus":{"Me":"/about","Github":"https://github.com/2417357623","Blog":"https://ohevan.com","Friends":"/friends"}}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/myBlog/">
+                    <img src="/myBlog/images/pinaFavicon.png" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/myBlog/">
+                
+                PinaPop&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/myBlog/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/myBlog/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   target="_blank" rel="noopener" href="https://status.ohevan.com/"
+                                        >
+                                    <i class="fa-regular fa-chart-bar fa-fw"></i>
+                                    STATUS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a href="/myBlog/about">
+                                                    ME
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/2417357623">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://ohevan.com">
+                                                    BLOG
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/myBlog/friends">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/myBlog/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/myBlog/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           target="_blank" rel="noopener" href="https://status.ohevan.com/"
+                        >
+                            <span>
+                                STATUS
+                            </span>
+                            
+                                <i class="fa-regular fa-chart-bar fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/myBlog/about">ME</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/2417357623">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://ohevan.com">BLOG</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/myBlog/friends">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/myBlog/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">16</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/myBlog/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">0</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/myBlog/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">15</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">整合现有项目，搭建monorepo</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/myBlog/images/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">PinaPop</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-11-04 22:13:12</span>
+        <span class="mobile">2024-11-04 22:13:12</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-12-30 09:29:38</span>
+            <span class="mobile">2024-12-30 09:29:38</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我在开发项目或者练习的时候，不喜欢新建仓库，一个个 clone，所以我把所有的项目丢到一个仓库里，这样我可以在不同的项目中反复横跳，方便的修改，并且通过一个 git 请求，上传到 git。但这造成一个问题，也是多包仓库一个共同问题，依赖重复度高，偶然的机会让我接触到 <code>monorepo</code> ，于是打算深入一下，重构一下我的仓库。</p>
+<h2 id="为什么使用-Monorepo"><a href="#为什么使用-Monorepo" class="headerlink" title="为什么使用 Monorepo"></a>为什么使用 Monorepo</h2><ul>
+<li><strong>代码库的可见性</strong>：使用 Monorepo 可以让你轻松查看公司所有的代码库，而不需要去查找和克隆多个不同的仓库。</li>
+<li><strong>一致性</strong>：Monorepo 能保持代码风格和配置的一致性。你可以在多个项目间共享 ESLint 配置、UI 组件库以及设计系统中的 Web 组件、实用工具库和文档。</li>
+<li><strong>依赖管理的优势</strong>：Monorepo 的真正优势在于依赖管理，它可以帮助你直观地查看整个项目的依赖关系图。此外，对于第三方依赖库，它能够在多个应用中去重使用，从而减少重复安装的包。</li>
+<li><strong>持续集成和自动化</strong>：Monorepo 非常适合用于持续集成和自动化流程，因为它可以轻松地一起构建和测试所有项目。</li>
+</ul>
+<blockquote>
+<p>相比之下，Polyrepo 是一种传统的多仓库模式。Polyrepo 需要在不同的项目之间共享代码，通常流程较为复杂。</p>
+</blockquote>
+<h2 id="Monorepo-的常见问题"><a href="#Monorepo-的常见问题" class="headerlink" title="Monorepo 的常见问题"></a>Monorepo 的常见问题</h2><ul>
+<li><strong>构建时间较长</strong>：随着项目规模增大，构建整个 Monorepo 会消耗更多时间。</li>
+<li><strong>编辑器性能问题</strong>：在大型 Monorepo 中，VSCode 可能会因为处理大量的 Git 历史记录而出现卡顿。</li>
+<li><strong>CI&#x2F;CD 速度缓慢</strong>：在持续集成和部署流程中，Monorepo 会占用更多资源，导致速度变慢。</li>
+</ul>
+<p>正因为如此，我们需要合适的工具来优化 Monorepo 的性能。Monorepo 官网定义了一系列构建工具需要遵守的约定，并且比较了市面上流行的 monorepo 构建工具，我们可以选择自己需要的工具。</p>
+<h2 id="Turborepo"><a href="#Turborepo" class="headerlink" title="Turborepo"></a>Turborepo</h2><p>我们这里直接使用工具来搭建第一个 monorepo，而不用原始的手段，这可以很好避免上述的常见问题。<br>Turborepo 是一个优化 Monorepo 工作流的工具。在官网上介绍了多种可以用于 Monorepo 的工具，接下来我会挑选 Turborepo 进行讲解，展示它如何提升 Monorepo 的效率。</p>
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><p>Turborepo 遵循了官网的 monorepo 最佳实践的相关约定，并且将构建速度做了很大提升。</p>
+<h3 id="Workspace-定义"><a href="#Workspace-定义" class="headerlink" title="Workspace 定义"></a>Workspace 定义</h3><p>在 Monorepo 的根目录的 <code>package.json</code> 中定义 <code>workspaces</code>，它会在第一层目录下查找带有 <code>package.json</code> 的文件夹，并将其识别为一个 workspace。</p>
+<h3 id="共享配置"><a href="#共享配置" class="headerlink" title="共享配置"></a>共享配置</h3><p>他可以在 package 文件夹中创建 <code>tailwind.config.js</code> 配置文件包，在别的项目引入。</p>
+<p>For example we want to share a tailwind config. We can generate a tailwind config and a package. Json in file.</p>
+<p>If we need to support both commonJs and ESM ,we need to provide two js files.</p>
+<p>Cjs. Js</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// packages/tailwind-config/tailwind.config.cjs</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">content</span>: [</span><br><span class="line">    <span class="comment">// 其他项目可以在各自配置中重写 content 部分</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">theme</span>: &#123;</span><br><span class="line">    <span class="attr">extend</span>: &#123;</span><br><span class="line">      <span class="attr">colors</span>: &#123;</span><br><span class="line">        <span class="attr">primary</span>: <span class="string">&#x27;#3490dc&#x27;</span>,</span><br><span class="line">        <span class="attr">secondary</span>: <span class="string">&#x27;#ffed4a&#x27;</span>,</span><br><span class="line">        <span class="attr">accent</span>: <span class="string">&#x27;#38c172&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">spacing</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;72&#x27;</span>: <span class="string">&#x27;18rem&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;84&#x27;</span>: <span class="string">&#x27;21rem&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;96&#x27;</span>: <span class="string">&#x27;24rem&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>Esm. Js</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// packages/tailwind-config/tailwind.config.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="attr">content</span>: [</span><br><span class="line">    <span class="comment">// 其他项目可以在各自配置中重写 content 部分</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">theme</span>: &#123;</span><br><span class="line">    <span class="attr">extend</span>: &#123;</span><br><span class="line">      <span class="attr">colors</span>: &#123;</span><br><span class="line">        <span class="attr">primary</span>: <span class="string">&#x27;#3490dc&#x27;</span>,</span><br><span class="line">        <span class="attr">secondary</span>: <span class="string">&#x27;#ffed4a&#x27;</span>,</span><br><span class="line">        <span class="attr">accent</span>: <span class="string">&#x27;#38c172&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">spacing</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;72&#x27;</span>: <span class="string">&#x27;18rem&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;84&#x27;</span>: <span class="string">&#x27;21rem&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;96&#x27;</span>: <span class="string">&#x27;24rem&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>Package. Json</p>
+<div class="code-container" data-rel="Json"><figure class="iseeu highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;@my-monorepo/tailwind-config&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;main&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./tailwind.config.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;exports&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;import&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./tailwind.config.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;require&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./tailwind.config.cjs&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;module&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;license&quot;</span><span class="punctuation">:</span> <span class="string">&quot;MIT&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;files&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;tailwind.config.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;tailwind.config.cjs&quot;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;peerDependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;tailwindcss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^3.0.0&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>Then we can install and use the config in other items. Its pnpm package. Json<br>Below </p>
+<div class="code-container" data-rel="Json"><figure class="iseeu highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;@my-monorepo/tailwind-config&quot;</span><span class="punctuation">:</span> <span class="string">&quot;workspace:*&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;tailwindcss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^3.0.0&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></div>
+
+<p>In the tailwind. Config. Js we can write like . Show a commonjs way to import.</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// apps/app1/tailwind.config.js</span></span><br><span class="line"><span class="keyword">const</span> sharedConfig = <span class="built_in">require</span>(<span class="string">&#x27;@my-monorepo/tailwind-config&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">presets</span>: [sharedConfig],</span><br><span class="line">  <span class="attr">content</span>: [</span><br><span class="line">    <span class="string">&quot;./src/**/*.&#123;js,jsx,ts,tsx&#125;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;./public/index.html&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>全程跟着官网来没什么毛病。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a class="link"   target="_blank" rel="noopener" href="https://turbo.build/repo/docs/getting-started" >turbo官网<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://monorepo.tools/#local-computation-caching" >monorepo 官网<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=9iU_IE6vnJ8" >Monorepos - How the Pros Scale Huge Software Projects &#x2F;&#x2F; Turborepo vs Nx<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+</ul>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 整合现有项目，搭建monorepo</li>
+        <li><strong>Author:</strong> PinaPop</li>
+        <li><strong>Created at
+                :</strong> 2024-11-04 22:13:12</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-12-30 09:29:38
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://2417357623.github.io/myBlog/2024/11/04/整合现有项目，搭建monorepo/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/myBlog/2024/11/04/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">浏览器工作原理</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/myBlog/2024/10/15/%E5%85%B3%E4%BA%8E%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BB%84%E4%BB%B6%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">关于修改第三方组件遇到的坑</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/myBlog/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+          recaptchaV3Key: "wasd",
+          
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">整合现有项目，搭建monorepo</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-Monorepo"><span class="nav-text">为什么使用 Monorepo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Monorepo-%E7%9A%84%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-text">Monorepo 的常见问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Turborepo"><span class="nav-text">Turborepo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF"><span class="nav-text">优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Workspace-%E5%AE%9A%E4%B9%89"><span class="nav-text">Workspace 定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E9%85%8D%E7%BD%AE"><span class="nav-text">共享配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4"><span class="nav-text">步骤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/myBlog/">PinaPop</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        15 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.2</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/myBlog/js/build/libs/Swup.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/myBlog/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/myBlog/js/build/utils.js" type="module"></script>
+
+<script src="/myBlog/js/build/main.js" type="module"></script>
+
+<script src="/myBlog/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/myBlog/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/myBlog/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/myBlog/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/myBlog/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/myBlog/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/myBlog/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/myBlog/js/build/tools/runtime.js"></script>
+
+    
+<script src="/myBlog/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/myBlog/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/myBlog/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/myBlog/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/myBlog/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/myBlog/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/myBlog/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/myBlog/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/myBlog/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/myBlog/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="PinaPop">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://2417357623.github.io/myBlog/2024/12/25/buy-me-coffee-dapp/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Referencebuy-me-a-coffee 技术栈Solidity，hardhat, react, ether 编写合约12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455&#x2F;&#x2F; SPDX-License-Identifier: UNLICENS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="buy-me-coffee-dapp">
+<meta property="og:url" content="https://2417357623.github.io/myBlog/2024/12/25/buy-me-coffee-dapp/index.html">
+<meta property="og:site_name" content="Pina">
+<meta property="og:description" content="Referencebuy-me-a-coffee 技术栈Solidity，hardhat, react, ether 编写合约12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455&#x2F;&#x2F; SPDX-License-Identifier: UNLICENS">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-12-25T21:41:14.000Z">
+<meta property="article:modified_time" content="2024-12-30T09:29:38.520Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/myBlog/images/pinaFavicon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/myBlog/images/pinaFavicon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/myBlog/images/pinaFavicon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            buy-me-coffee-dapp | PinaPop&#39;s Blog
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/myBlog/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/myBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/myBlog/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/myBlog/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"2417357623.github.io","root":"/myBlog/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"pina is a cat","subtitle":{"text":[],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":"https://github.com/2417357623","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.8.2","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Status":{"path":"https://status.ohevan.com/","icon":"fa-regular fa-chart-bar"},"About":{"icon":"fa-regular fa-user","submenus":{"Me":"/about","Github":"https://github.com/2417357623","Blog":"https://ohevan.com","Friends":"/friends"}}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/myBlog/">
+                    <img src="/myBlog/images/pinaFavicon.png" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/myBlog/">
+                
+                PinaPop&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/myBlog/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/myBlog/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   target="_blank" rel="noopener" href="https://status.ohevan.com/"
+                                        >
+                                    <i class="fa-regular fa-chart-bar fa-fw"></i>
+                                    STATUS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a href="/myBlog/about">
+                                                    ME
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/2417357623">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://ohevan.com">
+                                                    BLOG
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/myBlog/friends">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/myBlog/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/myBlog/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           target="_blank" rel="noopener" href="https://status.ohevan.com/"
+                        >
+                            <span>
+                                STATUS
+                            </span>
+                            
+                                <i class="fa-regular fa-chart-bar fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/myBlog/about">ME</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/2417357623">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://ohevan.com">BLOG</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/myBlog/friends">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/myBlog/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">16</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/myBlog/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">0</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/myBlog/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">15</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">buy-me-coffee-dapp</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/myBlog/images/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">PinaPop</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-12-25 21:41:14</span>
+        <span class="mobile">2024-12-25 21:41:14</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-12-30 09:29:38</span>
+            <span class="mobile">2024-12-30 09:29:38</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=cxxKdJk55Lk&t=1016s" >buy-me-a-coffee<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><p>Solidity，hardhat, react, ether</p>
+<h2 id="编写合约"><a href="#编写合约" class="headerlink" title="编写合约"></a>编写合约</h2><div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SPDX-License-Identifier: UNLICENSED</span></span><br><span class="line">pragma solidity ^<span class="number">0.8</span><span class="number">.28</span>;</span><br><span class="line"></span><br><span class="line">contract <span class="title class_">BuyMeACoffee</span> &#123;</span><br><span class="line">    <span class="comment">//Event to emit when a memo is created</span></span><br><span class="line">    event <span class="title class_">NewMemo</span>(</span><br><span class="line">        address indexed <span class="keyword">from</span>,</span><br><span class="line">        uint256 timestamp,</span><br><span class="line">        string name,</span><br><span class="line">        string message</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    struct <span class="title class_">Memo</span>&#123;</span><br><span class="line">        address <span class="keyword">from</span>;</span><br><span class="line">        uint256 timestamp;</span><br><span class="line">        string name;</span><br><span class="line">        string message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title class_">Memo</span>[] memos;</span><br><span class="line"></span><br><span class="line">    address payable public owner;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"></span>)&#123;</span><br><span class="line">        owner = <span class="title function_">payable</span>(msg.<span class="property">sender</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">buyCoffee</span>(<span class="params">string memory _name,string memory _message</span>) payable public &#123;</span><br><span class="line">        <span class="built_in">require</span>(msg.<span class="property">value</span> &gt; <span class="number">0</span>,<span class="string">&quot;can&#x27;t buy coffee with 0 eth&quot;</span>);</span><br><span class="line"></span><br><span class="line">        memos.<span class="title function_">push</span>(<span class="title class_">Memo</span>(</span><br><span class="line">            msg.<span class="property">sender</span>,</span><br><span class="line">            block.<span class="property">timestamp</span>,</span><br><span class="line">            _name,</span><br><span class="line">            _message</span><br><span class="line">        ));</span><br><span class="line"></span><br><span class="line">        emit <span class="title class_">NewMemo</span>(</span><br><span class="line">            msg.<span class="property">sender</span>,</span><br><span class="line">            block.<span class="property">timestamp</span>,</span><br><span class="line">            _name,</span><br><span class="line">            _message</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">withdrawTips</span>(<span class="params"></span>) public &#123;</span><br><span class="line">        <span class="built_in">require</span>(owner.<span class="title function_">send</span>(<span class="title function_">address</span>(<span class="variable language_">this</span>).<span class="property">balance</span>));</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">getMemos</span>(<span class="params"></span>) public view <span class="title function_">returns</span>(<span class="params">Memo[] memory</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> memos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>涉及了资金的转入，转出，事件的发送</p>
+<h2 id="部署验证测试合约"><a href="#部署验证测试合约" class="headerlink" title="部署验证测试合约"></a>部署验证测试合约</h2><h3 id="本地测试的代码"><a href="#本地测试的代码" class="headerlink" title="本地测试的代码"></a>本地测试的代码</h3><div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hre = <span class="built_in">require</span>(<span class="string">&quot;hardhat&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//returns the Ethereum balance of a given address.</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getBalance</span>(<span class="params">address</span>)&#123;</span><br><span class="line">    <span class="comment">//hardhat-network provider. get balance from this network</span></span><br><span class="line">    <span class="keyword">const</span> balanceBigInt = <span class="keyword">await</span> hre.<span class="property">ethers</span>.<span class="property">provider</span>.<span class="title function_">getBalance</span>(address);</span><br><span class="line">    <span class="keyword">return</span> hre.<span class="property">ethers</span>.<span class="title function_">formatEther</span>(balanceBigInt);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">printBalance</span>(<span class="params">addresses</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> idx = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">const</span> address <span class="keyword">of</span> addresses)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`address <span class="subst">$&#123;idx&#125;</span> balance:`</span>,<span class="keyword">await</span> <span class="title function_">getBalance</span>(address));</span><br><span class="line">        idx++</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">printMemos</span>(<span class="params">memos</span>) &#123;</span><br><span class="line">   <span class="keyword">for</span>(<span class="keyword">const</span> memo <span class="keyword">of</span> memos)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`at <span class="subst">$&#123;memo.timestamp&#125;</span> <span class="subst">$&#123;memo.name&#125;</span> ,<span class="subst">$&#123;memo.<span class="keyword">from</span>&#125;</span> said <span class="subst">$&#123;memo.message&#125;</span>`</span>)</span><br><span class="line">   &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">main</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="comment">//get example account </span></span><br><span class="line">    <span class="keyword">const</span> [owner,tipper,tipper2,tipper3] = <span class="keyword">await</span> hre.<span class="property">ethers</span>.<span class="title function_">getSigners</span>();</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`owner is :`</span>,owner.<span class="property">address</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//get the contract to deploy</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title class_">BuyMeACoffee</span> = <span class="keyword">await</span> hre.<span class="property">ethers</span>.<span class="title function_">getContractFactory</span>(<span class="string">&quot;BuyMeACoffee&quot;</span>);</span><br><span class="line">    <span class="keyword">const</span> buyMeACoffee = <span class="keyword">await</span> <span class="title class_">BuyMeACoffee</span>.<span class="title function_">deploy</span>();</span><br><span class="line">    <span class="keyword">await</span> buyMeACoffee.<span class="title function_">waitForDeployment</span>();</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(</span><br><span class="line">        <span class="string">`contract has been deployed successfully, contract address is <span class="subst">$&#123;buyMeACoffee.target&#125;</span>`</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`owner is :`</span>,<span class="keyword">await</span> buyMeACoffee.<span class="title function_">owner</span>());</span><br><span class="line"></span><br><span class="line">    <span class="comment">//check the balance before the coffee purchase</span></span><br><span class="line">    <span class="keyword">const</span> addresses = [owner.<span class="property">address</span>,tipper.<span class="property">address</span>,buyMeACoffee.<span class="property">target</span>]</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;== start ==&quot;</span>);</span><br><span class="line">    <span class="keyword">await</span> <span class="title function_">printBalance</span>(addresses);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//by owner a coffee;</span></span><br><span class="line">    <span class="keyword">const</span> tip = &#123;<span class="attr">value</span>:hre.<span class="property">ethers</span>.<span class="title function_">parseEther</span>(<span class="string">&quot;1&quot;</span>)&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//connect wallet to contract. call the contract function</span></span><br><span class="line">    <span class="keyword">await</span> buyMeACoffee.<span class="title function_">connect</span>(tipper).<span class="title function_">buyCoffee</span>(<span class="string">&quot;ly&quot;</span>,<span class="string">&quot;hello&quot;</span>,tip);</span><br><span class="line">    <span class="keyword">await</span> buyMeACoffee.<span class="title function_">connect</span>(tipper2).<span class="title function_">buyCoffee</span>(<span class="string">&quot;ly2&quot;</span>,<span class="string">&quot;hello2&quot;</span>,tip);</span><br><span class="line">    <span class="keyword">await</span> buyMeACoffee.<span class="title function_">connect</span>(tipper3).<span class="title function_">buyCoffee</span>(<span class="string">&quot;ly3&quot;</span>,<span class="string">&quot;hello3&quot;</span>,tip);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;== bought coffee ==&quot;</span>);</span><br><span class="line">    <span class="keyword">await</span> <span class="title function_">printBalance</span>(addresses);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//withdraw funds</span></span><br><span class="line">    <span class="keyword">await</span> buyMeACoffee.<span class="title function_">connect</span>(owner).<span class="title function_">withdrawTips</span>();</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;== withdraw tips ==&quot;</span>);</span><br><span class="line">    <span class="keyword">await</span> <span class="title function_">printBalance</span>(addresses);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//read all memos left for the owner</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;== memos ==&quot;</span>);</span><br><span class="line">    <span class="keyword">const</span> memos = <span class="keyword">await</span> buyMeACoffee.<span class="title function_">getMemos</span>();</span><br><span class="line">    <span class="title function_">printMemos</span>(memos)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">main</span>()</span><br><span class="line">  .<span class="title function_">then</span>()</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(error);</span><br><span class="line">    process.<span class="title function_">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>使用了本地测试网络提供的账户，本地提供的 provider 用来获取本地测试网的数据。并且我们是部署到了本地的测试网。所以我们无需做任何配置，一切都是默认的。</p>
+<h3 id="以太坊测试网的代码"><a href="#以太坊测试网的代码" class="headerlink" title="以太坊测试网的代码"></a>以太坊测试网的代码</h3><p>我们仍然需要将代码部署到以太坊测试网，这样所有人可以测试他，并且用假的以太币，并且和别的合约进行交互。</p>
+<p>钱包：metamask 代替默认的假钱包<br>Provider：alchemy 代替默认的假 provider，来进行对链的写入读取数据，和钱包的交互，执行合约代码。。。这样我们不需要维护任何的节点。</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hre = <span class="built_in">require</span>(<span class="string">&quot;hardhat&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">main</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="comment">//get the contract to deploy</span></span><br><span class="line">        <span class="keyword">const</span> <span class="title class_">BuyMeACoffee</span> = <span class="keyword">await</span> hre.<span class="property">ethers</span>.<span class="title function_">getContractFactory</span>(<span class="string">&quot;BuyMeACoffee&quot;</span>);</span><br><span class="line">        <span class="keyword">const</span> buyMeACoffee = <span class="keyword">await</span> <span class="title class_">BuyMeACoffee</span>.<span class="title function_">deploy</span>();</span><br><span class="line">        <span class="keyword">await</span> buyMeACoffee.<span class="title function_">waitForDeployment</span>();</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(</span><br><span class="line">            <span class="string">`contract has been deployed successfully, contract address is <span class="subst">$&#123;buyMeACoffee.target&#125;</span>`</span></span><br><span class="line">        );</span><br><span class="line">    </span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`owner is :`</span>,<span class="keyword">await</span> buyMeACoffee.<span class="title function_">owner</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">main</span>()</span><br><span class="line">  .<span class="title function_">then</span>()</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(error);</span><br><span class="line">    process.<span class="title function_">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure></div>
+
+<p>这里我们需要对 hardhat. Config 进行配置</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&quot;@nomicfoundation/hardhat-toolbox&quot;</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;dotenv&#x27;</span>).<span class="title function_">config</span>() <span class="comment">//为了可以使用.env里定义的变量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">SEPOLIA_URL</span> = process.<span class="property">env</span>.<span class="property">SEPOLIA_URL</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">PRIVATE_KEY</span> = process.<span class="property">env</span>.<span class="property">PRIVATE_KEY</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">API_KEY</span> = process.<span class="property">env</span>.<span class="property">API_KEY</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** <span class="doctag">@type</span> import(&#x27;hardhat/config&#x27;).HardhatUserConfig */</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">solidity</span>: <span class="string">&quot;0.8.28&quot;</span>,</span><br><span class="line">  <span class="attr">networks</span>:&#123;</span><br><span class="line">    <span class="attr">sepolia</span>:&#123;</span><br><span class="line">      <span class="attr">url</span>:<span class="variable constant_">SEPOLIA_URL</span>,</span><br><span class="line">      <span class="attr">accounts</span>:[<span class="variable constant_">PRIVATE_KEY</span>],</span><br><span class="line">      <span class="attr">chainId</span>:<span class="number">11155111</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">etherscan</span>: &#123;</span><br><span class="line">    <span class="comment">// Your API key for Etherscan,，允许你在 Hardhat 中自动验证和上传智能合约源代码到 Etherscan。</span></span><br><span class="line">    <span class="comment">//使用 Etherscan 的验证功能可以提高合约的透明度，允许其他开发者和用户查看和审核你的合约代码，增加可信度。</span></span><br><span class="line">    <span class="attr">apiKey</span>: &#123;</span><br><span class="line">      <span class="attr">sepolia</span>:<span class="variable constant_">API_KEY</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>至此，合约被部署到了 sepolia 测试网，那前端如何设计页面并和合约进行互动呢。</p>
+<h2 id="客户端开发"><a href="#客户端开发" class="headerlink" title="客户端开发"></a>客户端开发</h2><h3 id="浏览器环境的合约交互"><a href="#浏览器环境的合约交互" class="headerlink" title="浏览器环境的合约交互"></a>浏览器环境的合约交互</h3><p>我们使用 repl 快速搭建环境和前端项目。利用 React，jsx 来搭建我们的客户端。使钱包用户可以方便的和合约进行交互。</p>
+<div class="code-container" data-rel="Jsx"><figure class="iseeu highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> abi <span class="keyword">from</span> <span class="string">&#x27;../utils/BuyMeACoffee.json&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ethers &#125; <span class="keyword">from</span> <span class="string">&quot;ethers&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Head</span> <span class="keyword">from</span> <span class="string">&#x27;next/head&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Image</span> <span class="keyword">from</span> <span class="string">&#x27;next/image&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; useEffect, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">&#x27;../styles/Home.module.css&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Home</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// Contract Address &amp; ABI</span></span><br><span class="line">  <span class="keyword">const</span> contractAddress = <span class="string">&quot;0xd234976128226C683A3dcc9De834BFC5E2a49586&quot;</span>;</span><br><span class="line">  <span class="keyword">const</span> contractABI = abi.<span class="property">abi</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Component state</span></span><br><span class="line">  <span class="keyword">const</span> [currentAccount, setCurrentAccount] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> [name, setName] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> [message, setMessage] = <span class="title function_">useState</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> [memos, setMemos] = <span class="title function_">useState</span>([]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">onNameChange</span> = (<span class="params">event</span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setName</span>(event.<span class="property">target</span>.<span class="property">value</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">onMessageChange</span> = (<span class="params">event</span>) =&gt; &#123;</span><br><span class="line">    <span class="title function_">setMessage</span>(event.<span class="property">target</span>.<span class="property">value</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Wallet connection logic</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">isWalletConnected</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123; ethereum &#125; = <span class="variable language_">window</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">const</span> accounts = <span class="keyword">await</span> ethereum.<span class="title function_">request</span>(&#123;<span class="attr">method</span>: <span class="string">&#x27;eth_accounts&#x27;</span>&#125;)</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;accounts: &quot;</span>, accounts);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (accounts.<span class="property">length</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> account = accounts[<span class="number">0</span>];</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;wallet is connected! &quot;</span> + account);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;make sure MetaMask is connected&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;error: &quot;</span>, error);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">connectWallet</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123;ethereum&#125; = <span class="variable language_">window</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (!ethereum) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;please install MetaMask&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">const</span> accounts = <span class="keyword">await</span> ethereum.<span class="title function_">request</span>(&#123;</span><br><span class="line">        <span class="attr">method</span>: <span class="string">&#x27;eth_requestAccounts&#x27;</span></span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      <span class="title function_">setCurrentAccount</span>(accounts[<span class="number">0</span>]);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">buyCoffee</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123;ethereum&#125; = <span class="variable language_">window</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (ethereum) &#123;</span><br><span class="line">        <span class="keyword">const</span> provider = <span class="keyword">new</span> ethers.<span class="property">providers</span>.<span class="title class_">Web3Provider</span>(ethereum, <span class="string">&quot;any&quot;</span>);</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(provider);</span><br><span class="line">        <span class="keyword">const</span> signer = provider.<span class="title function_">getSigner</span>();</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(signer)</span><br><span class="line">        <span class="keyword">const</span> buyMeACoffee = <span class="keyword">new</span> ethers.<span class="title class_">Contract</span>(</span><br><span class="line">          contractAddress,</span><br><span class="line">          contractABI,</span><br><span class="line">          signer</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;buying coffee..&quot;</span>)</span><br><span class="line">        <span class="keyword">const</span> coffeeTxn = <span class="keyword">await</span> buyMeACoffee.<span class="title function_">buyCoffee</span>(</span><br><span class="line">          name ? name : <span class="string">&quot;anon&quot;</span>,</span><br><span class="line">          message ? message : <span class="string">&quot;Enjoy your coffee!&quot;</span>,</span><br><span class="line">          &#123;<span class="attr">value</span>: ethers.<span class="property">utils</span>.<span class="title function_">parseEther</span>(<span class="string">&quot;0.001&quot;</span>)&#125;</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">await</span> coffeeTxn.<span class="title function_">wait</span>();</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;mined &quot;</span>, coffeeTxn.<span class="property">hash</span>);</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;coffee purchased!&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Clear the form fields.</span></span><br><span class="line">        <span class="title function_">setName</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">        <span class="title function_">setMessage</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Function to fetch all memos stored on-chain.</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">getMemos</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123; ethereum &#125; = <span class="variable language_">window</span>;</span><br><span class="line">      <span class="keyword">if</span> (ethereum) &#123;</span><br><span class="line">        <span class="keyword">const</span> provider = <span class="keyword">new</span> ethers.<span class="property">providers</span>.<span class="title class_">Web3Provider</span>(ethereum);</span><br><span class="line">        <span class="keyword">const</span> signer = provider.<span class="title function_">getSigner</span>();</span><br><span class="line">        <span class="keyword">const</span> buyMeACoffee = <span class="keyword">new</span> ethers.<span class="title class_">Contract</span>(</span><br><span class="line">          contractAddress,</span><br><span class="line">          contractABI,</span><br><span class="line">          signer</span><br><span class="line">        );</span><br><span class="line">        </span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;fetching memos from the blockchain..&quot;</span>);</span><br><span class="line">        <span class="keyword">const</span> memos = <span class="keyword">await</span> buyMeACoffee.<span class="title function_">getMemos</span>();</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;fetched!&quot;</span>);</span><br><span class="line">        <span class="title function_">setMemos</span>(memos);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Metamask is not connected&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">    &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> buyMeACoffee;</span><br><span class="line">    <span class="title function_">isWalletConnected</span>();</span><br><span class="line">    <span class="title function_">getMemos</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create an event handler function for when someone sends</span></span><br><span class="line">    <span class="comment">// us a new memo.</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">onNewMemo</span> = (<span class="params"><span class="keyword">from</span>, timestamp, name, message</span>) =&gt; &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Memo received: &quot;</span>, <span class="keyword">from</span>, timestamp, name, message);</span><br><span class="line">      <span class="title function_">setMemos</span>(<span class="function">(<span class="params">prevState</span>) =&gt;</span> [</span><br><span class="line">        ...prevState,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">address</span>: <span class="keyword">from</span>,</span><br><span class="line">          <span class="attr">timestamp</span>: <span class="keyword">new</span> <span class="title class_">Date</span>(timestamp * <span class="number">1000</span>),</span><br><span class="line">          message,</span><br><span class="line">          name</span><br><span class="line">        &#125;</span><br><span class="line">      ]);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> &#123;ethereum&#125; = <span class="variable language_">window</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Listen for new memo events.</span></span><br><span class="line">    <span class="keyword">if</span> (ethereum) &#123;</span><br><span class="line">      <span class="keyword">const</span> provider = <span class="keyword">new</span> ethers.<span class="property">providers</span>.<span class="title class_">Web3Provider</span>(ethereum, <span class="string">&quot;any&quot;</span>);</span><br><span class="line">      <span class="keyword">const</span> signer = provider.<span class="title function_">getSigner</span>();</span><br><span class="line">      buyMeACoffee = <span class="keyword">new</span> ethers.<span class="title class_">Contract</span>(</span><br><span class="line">        contractAddress,</span><br><span class="line">        contractABI,</span><br><span class="line">        signer</span><br><span class="line">      );</span><br><span class="line"></span><br><span class="line">      buyMeACoffee.<span class="title function_">on</span>(<span class="string">&quot;NewMemo&quot;</span>, onNewMemo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (buyMeACoffee) &#123;</span><br><span class="line">        buyMeACoffee.<span class="title function_">off</span>(<span class="string">&quot;NewMemo&quot;</span>, onNewMemo);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, []);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;styles.container&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Head</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>Buy Albert a Coffee!<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;description&quot;</span> <span class="attr">content</span>=<span class="string">&quot;Tipping site&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;icon&quot;</span> <span class="attr">href</span>=<span class="string">&quot;/favicon.ico&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Head</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">main</span> <span class="attr">className</span>=<span class="string">&#123;styles.main&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h1</span> <span class="attr">className</span>=<span class="string">&#123;styles.title&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          Buy Albert a Coffee!</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        </span></span><br><span class="line"><span class="language-xml">        &#123;currentAccount ? (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">form</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                  Name</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml">                </span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">id</span>=<span class="string">&quot;name&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">type</span>=<span class="string">&quot;text&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">placeholder</span>=<span class="string">&quot;anon&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">onChange</span>=<span class="string">&#123;onNameChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  /&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                  Send Albert a message</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">textarea</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">rows</span>=<span class="string">&#123;3&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">placeholder</span>=<span class="string">&quot;Enjoy your coffee!&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">id</span>=<span class="string">&quot;message&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">onChange</span>=<span class="string">&#123;onMessageChange&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">required</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                &gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">type</span>=<span class="string">&quot;button&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">onClick</span>=<span class="string">&#123;buyCoffee&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                &gt;</span></span></span><br><span class="line"><span class="language-xml">                  Send 1 Coffee for 0.001ETH</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ) : (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;connectWallet&#125;</span>&gt;</span> Connect your wallet <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        )&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">main</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">      &#123;currentAccount &amp;&amp; (<span class="tag">&lt;<span class="name">h1</span>&gt;</span>Memos received<span class="tag">&lt;/<span class="name">h1</span>&gt;</span>)&#125;</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">      &#123;currentAccount &amp;&amp; (memos.map((memo, idx) =&gt; &#123;</span></span><br><span class="line"><span class="language-xml">        return (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">div</span> <span class="attr">key</span>=<span class="string">&#123;idx&#125;</span> <span class="attr">style</span>=<span class="string">&#123;&#123;border:</span>&quot;<span class="attr">2px</span> <span class="attr">solid</span>&quot;, &quot;<span class="attr">borderRadius</span>&quot;<span class="attr">:</span>&quot;<span class="attr">5px</span>&quot;, <span class="attr">padding:</span> &quot;<span class="attr">5px</span>&quot;, <span class="attr">margin:</span> &quot;<span class="attr">5px</span>&quot;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&quot;<span class="attr">fontWeight</span>&quot;<span class="attr">:</span>&quot;<span class="attr">bold</span>&quot;&#125;&#125;&gt;</span>&quot;&#123;memo.message&#125;&quot;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>From: &#123;memo.name&#125; at &#123;memo.timestamp.toString()&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        )</span></span><br><span class="line"><span class="language-xml">      &#125;))&#125;</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">footer</span> <span class="attr">className</span>=<span class="string">&#123;styles.footer&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">a</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">href</span>=<span class="string">&quot;https://alchemy.com/?a=roadtoweb3weektwo&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">rel</span>=<span class="string">&quot;noopener noreferrer&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &gt;</span></span></span><br><span class="line"><span class="language-xml">          Created by @thatguyintech for Alchemy&#x27;s Road to Web3 lesson two!</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>首先注意这是浏览器环境，所以获取 provider 和刚才的 node 有所不同。</p>
+<p>其次这里涉及到了链接钱包，获取钱包的签名者，获取钱包的 provider，合约实例生成（3 个参数），合约函数调用。有些和 node 那边不一样，有些是一样的。</p>
+<h3 id="我再提供一个-node-环境的脚本文件，主要用来回收资金"><a href="#我再提供一个-node-环境的脚本文件，主要用来回收资金" class="headerlink" title="我再提供一个 node 环境的脚本文件，主要用来回收资金"></a>我再提供一个 node 环境的脚本文件，主要用来回收资金</h3><div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// scripts/withdraw.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> hre = <span class="built_in">require</span>(<span class="string">&quot;hardhat&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> abi = <span class="built_in">require</span>(<span class="string">&quot;../artifacts/contracts/BuyMeACoffee.sol/BuyMeACoffee.json&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getBalance</span>(<span class="params">provider, address</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> balanceBigInt = <span class="keyword">await</span> provider.<span class="title function_">getBalance</span>(address);</span><br><span class="line">  <span class="keyword">return</span> hre.<span class="property">ethers</span>.<span class="property">utils</span>.<span class="title function_">formatEther</span>(balanceBigInt);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">main</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// Get the contract that has been deployed to Goerli.</span></span><br><span class="line">  <span class="keyword">const</span> contractAddress=<span class="string">&quot;0xDBa03676a2fBb6711CB652beF5B7416A53c1421D&quot;</span>;</span><br><span class="line">  <span class="keyword">const</span> contractABI = abi.<span class="property">abi</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Get the node connection and wallet connection.</span></span><br><span class="line">  <span class="keyword">const</span> provider = <span class="keyword">new</span> hre.<span class="property">ethers</span>.<span class="property">providers</span>.<span class="title class_">JsonRpcProvider</span>(<span class="string">&quot;goerli&quot;</span>, process.<span class="property">env</span>.<span class="property">GOERLI_API_KEY</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Ensure that signer is the SAME address as the original contract deployer,</span></span><br><span class="line">  <span class="comment">// or else this script will fail with an error.</span></span><br><span class="line">  <span class="keyword">const</span> signer = <span class="keyword">new</span> hre.<span class="property">ethers</span>.<span class="title class_">Wallet</span>(process.<span class="property">env</span>.<span class="property">PRIVATE_KEY</span>, provider);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Instantiate connected contract.</span></span><br><span class="line">  <span class="keyword">const</span> buyMeACoffee = <span class="keyword">new</span> hre.<span class="property">ethers</span>.<span class="title class_">Contract</span>(contractAddress, contractABI, signer);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Check starting balances.</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;current balance of owner: &quot;</span>, <span class="keyword">await</span> <span class="title function_">getBalance</span>(provider, signer.<span class="property">address</span>), <span class="string">&quot;ETH&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> contractBalance = <span class="keyword">await</span> <span class="title function_">getBalance</span>(provider, buyMeACoffee.<span class="property">address</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;current balance of contract: &quot;</span>, <span class="keyword">await</span> <span class="title function_">getBalance</span>(provider, buyMeACoffee.<span class="property">address</span>), <span class="string">&quot;ETH&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Withdraw funds if there are funds to withdraw.</span></span><br><span class="line">  <span class="keyword">if</span> (contractBalance !== <span class="string">&quot;0.0&quot;</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;withdrawing funds..&quot;</span>)</span><br><span class="line">    <span class="keyword">const</span> withdrawTxn = <span class="keyword">await</span> buyMeACoffee.<span class="title function_">withdrawTips</span>();</span><br><span class="line">    <span class="keyword">await</span> withdrawTxn.<span class="title function_">wait</span>();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;no funds to withdraw!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Check ending balance.</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;current balance of owner: &quot;</span>, <span class="keyword">await</span> <span class="title function_">getBalance</span>(provider, signer.<span class="property">address</span>), <span class="string">&quot;ETH&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// We recommend this pattern to be able to use async/await everywhere</span></span><br><span class="line"><span class="comment">// and properly handle errors.</span></span><br><span class="line"><span class="title function_">main</span>()</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function">() =&gt;</span> process.<span class="title function_">exit</span>(<span class="number">0</span>))</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(error);</span><br><span class="line">    process.<span class="title function_">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure></div>
+
+
+<h3 id="比较（重要）"><a href="#比较（重要）" class="headerlink" title="比较（重要）"></a>比较（重要）</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>第一段代码（<code>withdraw.js</code>）</th>
+<th>第二段代码（<code>Web3Provider</code>）</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>运行环境</strong></td>
+<td>Node.js + Hardhat</td>
+<td>浏览器 + MetaMask</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Provider 类型</strong></td>
+<td><code>JsonRpcProvider</code></td>
+<td><code>Web3Provider</code></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>签名者来源</strong></td>
+<td>环境变量中的私钥</td>
+<td>用户通过 MetaMask 签署</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>后端脚本，自动化操作（如提取资金、批量交易）</td>
+<td>前端交互，用户发起交易（如支付、操作合约）</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>与区块链交互</strong></td>
+<td>独立连接节点，通过私钥签名</td>
+<td>依赖浏览器钱包，通过用户确认并签名</td>
+<td>****</td>
+</tr>
+</tbody></table>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> buy-me-coffee-dapp</li>
+        <li><strong>Author:</strong> PinaPop</li>
+        <li><strong>Created at
+                :</strong> 2024-12-25 21:41:14</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-12-30 09:29:38
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://2417357623.github.io/myBlog/2024/12/25/buy-me-coffee-dapp/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/myBlog/2024/12/25/%E5%85%BC%E5%AE%B9%E9%B9%8F%E8%93%9D%E8%AE%BE%E8%AE%A1%E6%A0%B7%E5%BC%8F/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">兼容鹏蓝设计样式</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/myBlog/2024/12/03/%E6%80%A7%E8%83%BD%E5%92%8C%E6%8C%87%E6%A0%87/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">性能和指标</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/myBlog/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+          recaptchaV3Key: "wasd",
+          
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">buy-me-coffee-dapp</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-text">Reference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E6%A0%88"><span class="nav-text">技术栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E5%90%88%E7%BA%A6"><span class="nav-text">编写合约</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E9%AA%8C%E8%AF%81%E6%B5%8B%E8%AF%95%E5%90%88%E7%BA%A6"><span class="nav-text">部署验证测试合约</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%B5%8B%E8%AF%95%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="nav-text">本地测试的代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%B5%8B%E8%AF%95%E7%BD%91%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="nav-text">以太坊测试网的代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%BC%80%E5%8F%91"><span class="nav-text">客户端开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E7%8E%AF%E5%A2%83%E7%9A%84%E5%90%88%E7%BA%A6%E4%BA%A4%E4%BA%92"><span class="nav-text">浏览器环境的合约交互</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E5%86%8D%E6%8F%90%E4%BE%9B%E4%B8%80%E4%B8%AA-node-%E7%8E%AF%E5%A2%83%E7%9A%84%E8%84%9A%E6%9C%AC%E6%96%87%E4%BB%B6%EF%BC%8C%E4%B8%BB%E8%A6%81%E7%94%A8%E6%9D%A5%E5%9B%9E%E6%94%B6%E8%B5%84%E9%87%91"><span class="nav-text">我再提供一个 node 环境的脚本文件，主要用来回收资金</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%94%E8%BE%83%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="nav-text">比较（重要）</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/myBlog/">PinaPop</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        15 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.2</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/myBlog/js/build/libs/Swup.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/myBlog/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/myBlog/js/build/utils.js" type="module"></script>
+
+<script src="/myBlog/js/build/main.js" type="module"></script>
+
+<script src="/myBlog/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/myBlog/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/myBlog/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/myBlog/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/myBlog/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/myBlog/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/myBlog/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/myBlog/js/build/tools/runtime.js"></script>
+
+    
+<script src="/myBlog/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/myBlog/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/myBlog/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/myBlog/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/myBlog/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/myBlog/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/myBlog/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/myBlog/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/myBlog/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/myBlog/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

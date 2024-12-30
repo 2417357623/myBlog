@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="PinaPop">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://2417357623.github.io/myBlog/2024/09/28/vue是如何渲染spa的/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="涉及到的知识面正则表达式，数据劫持，虚拟 DOM 简易流程加虚拟 DOM为了可以介绍清楚整个转化流程，我将拿一个简单地 .vue 文件举例子，并把整个渲染流程代码逐个拆分到每个步骤中去。这个例子会涉及响应式和虚拟 DOM。 123456789101112131415&lt;template&gt;    &lt;h1&gt;&#123;&#123; title &#125;&#125;&lt;&#x2F;h">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VUE是如何渲染SFC的">
+<meta property="og:url" content="https://2417357623.github.io/myBlog/2024/09/28/VUE%E6%98%AF%E5%A6%82%E4%BD%95%E6%B8%B2%E6%9F%93SPA%E7%9A%84/index.html">
+<meta property="og:site_name" content="Pina">
+<meta property="og:description" content="涉及到的知识面正则表达式，数据劫持，虚拟 DOM 简易流程加虚拟 DOM为了可以介绍清楚整个转化流程，我将拿一个简单地 .vue 文件举例子，并把整个渲染流程代码逐个拆分到每个步骤中去。这个例子会涉及响应式和虚拟 DOM。 123456789101112131415&lt;template&gt;    &lt;h1&gt;&#123;&#123; title &#125;&#125;&lt;&#x2F;h">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-09-28T13:35:52.000Z">
+<meta property="article:modified_time" content="2024-12-30T09:29:38.520Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="SFC">
+<meta property="article:tag" content="渲染原理">
+<meta property="article:tag" content="前端开发">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/myBlog/images/pinaFavicon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/myBlog/images/pinaFavicon.png">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/myBlog/images/pinaFavicon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            VUE是如何渲染SFC的 | PinaPop&#39;s Blog
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/myBlog/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/myBlog/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/myBlog/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/myBlog/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"2417357623.github.io","root":"/myBlog/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"pina is a cat","subtitle":{"text":[],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":"https://github.com/2417357623","instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.8.2","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Status":{"path":"https://status.ohevan.com/","icon":"fa-regular fa-chart-bar"},"About":{"icon":"fa-regular fa-user","submenus":{"Me":"/about","Github":"https://github.com/2417357623","Blog":"https://ohevan.com","Friends":"/friends"}}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/myBlog/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/myBlog/">
+                    <img src="/myBlog/images/pinaFavicon.png" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/myBlog/">
+                
+                PinaPop&#39;s Blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/myBlog/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/myBlog/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   target="_blank" rel="noopener" href="https://status.ohevan.com/"
+                                        >
+                                    <i class="fa-regular fa-chart-bar fa-fw"></i>
+                                    STATUS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a href="/myBlog/about">
+                                                    ME
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/2417357623">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://ohevan.com">
+                                                    BLOG
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/myBlog/friends">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/myBlog/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/myBlog/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           target="_blank" rel="noopener" href="https://status.ohevan.com/"
+                        >
+                            <span>
+                                STATUS
+                            </span>
+                            
+                                <i class="fa-regular fa-chart-bar fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/myBlog/about">ME</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/2417357623">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://ohevan.com">BLOG</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/myBlog/friends">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/myBlog/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">16</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/myBlog/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">0</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/myBlog/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">15</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">VUE是如何渲染SFC的</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/myBlog/images/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">PinaPop</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-09-28 13:35:52</span>
+        <span class="mobile">2024-09-28 13:35:52</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2024-12-30 09:29:38</span>
+            <span class="mobile">2024-12-30 09:29:38</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/myBlog/tags/Vue/">Vue</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/myBlog/tags/SFC/">SFC</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/myBlog/tags/%E6%B8%B2%E6%9F%93%E5%8E%9F%E7%90%86/">渲染原理</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/myBlog/tags/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">前端开发</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="涉及到的知识面"><a href="#涉及到的知识面" class="headerlink" title="涉及到的知识面"></a>涉及到的知识面</h2><p>正则表达式，数据劫持，虚拟 DOM</p>
+<h2 id="简易流程加虚拟-DOM"><a href="#简易流程加虚拟-DOM" class="headerlink" title="简易流程加虚拟 DOM"></a>简易流程加虚拟 DOM</h2><p>为了可以介绍清楚整个转化流程，我将拿一个简单地 <code>.vue</code> 文件举例子，并把整个渲染流程代码逐个拆分到每个步骤中去。这个例子会涉及响应式和虚拟 DOM。</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;h1&gt;&#123;&#123; title &#125;&#125;&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;&#123;&#123; content &#125;&#125;&lt;/p&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">            title: &quot;this is title&quot;,</span><br><span class="line">            content: &quot;this is Content&quot;,</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="SFC转为JS"><a href="#SFC转为JS" class="headerlink" title="SFC转为JS"></a>SFC转为JS</h3><p>由于浏览器只能识别 <code>http | js | css</code>  文件，所以 <code>vite</code> 官方 提供一个<code>@vitejs/plugin-vue</code> 组件，可以把这个插件想象成编译器，把 <code>.vue</code> 文件转化为 <code>.js</code>文件。为了更好的探究实现过程，我决定手写，这时候就涉及到读取vue文件，把内容转为字符串输出。</p>
+<p>早期，浏览器是一个沙盒，它不允许我们操作本地文件，通常都是后端处理，前端使用 <code>fetch</code> API 或 <code>XMLHttpRequest</code> 来发送请求到后端拿到数据。浏览器只允许同源的Ajax操作，如果跨域，就必须使用CORS权限。<br>除此之外，还有纯前端操作文件的方法。参考<a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/xgangzai/article/details/129605068" ># 使用File System Access API让浏览器拥有操作本地文件的能力<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>。<br>纯前端方法不是很流行，所以我不做研究。</p>
+<p>利用 <code>webpack</code> ，相当于是后端的处理方式，由于 <code>webpack</code> 运行在 <code>Nodejs</code> 上，所以webpack内部在编译的过程帮我们处理了读取文件的步骤，我们只需配置一个loader，参数是从目标文件拿到的字符串信息，返回一个字符串webpack会生成对应的js文件。在loader中编写我们的处理逻辑。</p>
+<p>以下手写webpack-loader ，模拟了<code>@vitejs/plugin-vue</code>的编译功能，把vue转化为了js。</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> regTemplate = <span class="regexp">/\&lt;template\&gt;(.+?)\&lt;\/template\&gt;/</span></span><br><span class="line"><span class="keyword">const</span> regScript = <span class="regexp">/\&lt;script\&gt;(.+?)\&lt;\/script\&gt;/</span></span><br><span class="line"><span class="keyword">const</span> regFirstSign = <span class="regexp">/(&#123;)/</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="keyword">function</span> (<span class="params">source</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> _source = source.<span class="title function_">replace</span>(<span class="regexp">/[\r\n]/g</span>,<span class="string">&#x27;&#x27;</span>)  </span><br><span class="line">      <span class="keyword">const</span> template = _source.<span class="title function_">match</span>(regTemplate)[<span class="number">1</span>]</span><br><span class="line">      <span class="keyword">const</span> script = _source.<span class="title function_">match</span>(regScript)[<span class="number">1</span>]</span><br><span class="line">      <span class="keyword">const</span> finalScript = script.<span class="title function_">replace</span>(regFirstSign, <span class="string">&#x27;$1 template:&#x27;</span> + <span class="string">&#x27;`&#x27;</span> + template + <span class="string">&#x27;`&#x27;</span> + <span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(finalScript)</span><br><span class="line">      <span class="keyword">return</span> finalScript</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//finalScript like this </span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123; <span class="attr">template</span>:<span class="string">`    &lt;h1&gt;&#123;&#123; title &#125;&#125;&lt;/h1&gt;    &lt;p&gt;&#123;&#123; content &#125;&#125;&lt;/p&gt;`</span>,    <span class="title function_">data</span>(<span class="params"></span>) &#123;        <span class="keyword">return</span> &#123;            <span class="attr">title</span>: <span class="string">&quot;this is </span></span><br><span class="line"><span class="string">title&quot;</span>,            <span class="attr">content</span>: <span class="string">&quot;this is Content&quot;</span>,        &#125;    &#125;&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<h3 id="template模板分析，编译"><a href="#template模板分析，编译" class="headerlink" title="template模板分析，编译"></a>template模板分析，编译</h3><p>template分为标签，属性，内容。</p>
+<ul>
+<li>标签有可能是原生的html，也有可能是组件</li>
+<li>属性也有可能是vue框架属性，自定义属性<br>vue会对这些模板做过滤，生成AST树。</li>
+</ul>
+<p>首先把文件里的template和data解构出来</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App.vue&#x27;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">App</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//解构出被loader处理过的App.js</span></span><br><span class="line"><span class="keyword">const</span> &#123;template,<span class="attr">data</span>: generate &#125; = <span class="title class_">App</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> data  = <span class="title function_">reactive</span>(<span class="title function_">generate</span>())</span><br></pre></td></tr></table></figure></div>
+
+<p>然后对模板进行分析编译，编译包括匹配每个标签和内容，然后生成虚拟的DOM。</p>
+<blockquote>
+<p>这里是一个简易版本，只针对原生标签的innerHtml做了分析。这个 innerHtml 也并非表达式。除此之外，也没有 vue 的特殊的事件属性写法</p>
+</blockquote>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> regHtml = <span class="regexp">/\&lt;(.+?)\&gt;\&#123;\&#123;(.+?)\&#125;\&#125;\&lt;\/.+?\&gt;/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">compileTemplate</span> = (<span class="params">template,data</span>)=&gt;&#123;</span><br><span class="line">    <span class="comment">//vDOM原来是对象，这里用数组只是为了展示虚拟节点的思想</span></span><br><span class="line">    <span class="keyword">const</span> vDOM = []</span><br><span class="line">    <span class="keyword">const</span> matched = template.<span class="title function_">match</span>(<span class="keyword">new</span> <span class="title class_">RegExp</span>(regHtml,<span class="string">&quot;ig&quot;</span>))</span><br><span class="line">    matched.<span class="title function_">forEach</span>(<span class="function">(<span class="params">tag,index</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> [,tagName,key] = tag.<span class="title function_">match</span>(<span class="keyword">new</span> <span class="title class_">RegExp</span>(regHtml,<span class="string">&quot;i&quot;</span>))</span><br><span class="line">        </span><br><span class="line">        vDOM[index] = &#123;</span><br><span class="line">            <span class="attr">tag</span>:tagName,</span><br><span class="line">            <span class="attr">children</span>: data[key.<span class="title function_">trim</span>()]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> vDOM</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<h3 id="render虚拟DOM"><a href="#render虚拟DOM" class="headerlink" title="render虚拟DOM"></a>render虚拟DOM</h3><p>初次渲染只需要把虚拟DOM渲染到真实DOM上</p>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">render</span> = (<span class="params">app,template,data</span>)=&gt;&#123;</span><br><span class="line">    state.<span class="property">_vDOM</span> = <span class="title function_">compileTemplate</span>(template,data)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> fragment  =  <span class="variable language_">document</span>.<span class="title function_">createDocumentFragment</span>()</span><br><span class="line">    <span class="comment">//只做一层的渲染</span></span><br><span class="line">    state.<span class="property">_vDOM</span>.<span class="title function_">forEach</span>(<span class="function"><span class="params">vnode</span> =&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> &#123;tag,children&#125; = vnode</span><br><span class="line"></span><br><span class="line">        <span class="comment">//并且只做innerText</span></span><br><span class="line">        <span class="keyword">const</span> node = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(tag)</span><br><span class="line">        node.<span class="property">innerText</span> = children</span><br><span class="line"></span><br><span class="line">        fragment.<span class="title function_">appendChild</span>(node)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    app.<span class="title function_">appendChild</span>(fragment)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<h3 id="数据更新，重新渲染"><a href="#数据更新，重新渲染" class="headerlink" title="数据更新，重新渲染"></a>数据更新，重新渲染</h3><p>当数据更新，我们如何追踪这种变化？es6的proxy给了我们答案，通过一种数据劫持的方案，我们可以检测到数据变化，并且做一些额外的（更新视图）的动作。<br>以下是proxy ，set的handler的实现。<br>当数据变更时，我们会根据新的data重新编译模板，获取新的虚拟DOM，通过比较新老虚拟DOM，获取发生变化的虚拟DOM，并在真实DOM上重新渲染这部分的值。</p>
+<blockquote>
+<p>这种比较涉及了diff算法，这里没有去实现</p>
+</blockquote>
+<div class="code-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">update</span> = (<span class="params">template,vDOM,data,value</span>)=&gt;&#123;</span><br><span class="line">    <span class="keyword">const</span> newVDOM = <span class="title function_">compileTemplate</span>(template,data)</span><br><span class="line"></span><br><span class="line">    newVDOM.<span class="title function_">forEach</span>( <span class="function">(<span class="params">vnode,index</span>) =&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(vnode.<span class="property">children</span> !== vDOM[index].<span class="property">children</span>)&#123;</span><br><span class="line">            <span class="title function_">patch</span>(value,index)</span><br><span class="line">            vDOM.<span class="title function_">splice</span>(<span class="number">0</span>, vDOM.<span class="property">length</span>, ...newVDOM); <span class="comment">// 直接用新内容替换原有内容</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">patch</span> = (<span class="params">value,index</span>)=&gt;&#123;</span><br><span class="line">    <span class="keyword">const</span> childNodes = state.<span class="property">_app</span>.<span class="property">children</span></span><br><span class="line">    childNodes[index].<span class="property">innerText</span> = value</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">createSetter</span> = (<span class="params"></span>)=&gt;&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">set</span> = (<span class="params">target,key,value,receiver</span>) =&gt;&#123;</span><br><span class="line">        <span class="keyword">const</span> oldValue = target[key]</span><br><span class="line">        <span class="comment">//一旦执行这一句，那么target的值立马会发生变化，也就是说，下面的代码的target会立马变成新的值。所以update的参数将会是更新后的data</span></span><br><span class="line">        <span class="keyword">const</span> res = <span class="title class_">Reflect</span>.<span class="title function_">set</span>(target,key,value,receiver)</span><br><span class="line">        <span class="keyword">if</span>(!<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">hasOwnProperty</span>.<span class="title function_">call</span>(target,key))&#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;响应式新增&quot;</span>, + value)</span><br><span class="line">            <span class="title function_">update</span>(state.<span class="property">_template</span>,state.<span class="property">_vDOM</span>,state.<span class="property">_data</span>,value)</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(value !== oldValue)&#123;</span><br><span class="line">                <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;响应式修改&quot;</span>, key + <span class="string">&quot; = &quot;</span> +  value)</span><br><span class="line">                <span class="title function_">update</span>(state.<span class="property">_template</span>,state.<span class="property">_vDOM</span>,state.<span class="property">_data</span>,value)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> set</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> get = <span class="title function_">createGetter</span>()</span><br><span class="line"><span class="keyword">const</span> set = <span class="title function_">createSetter</span>()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mutableHandler = &#123;</span><br><span class="line">    get,</span><br><span class="line">    set</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="流程小结"><a href="#流程小结" class="headerlink" title="流程小结"></a>流程小结</h3><p> 我们需要拆分一下概念，整个实现涉及到了 vue 的响应式，和虚拟 DOM。</p>
+<ul>
+<li>响应式，使得开发者不需要手动管理 DOM 的更新，Vue 会根据数据的变化自动重新渲染相关部分，减少了出错的可能性。</li>
+<li>而虚拟 DOM ，避免了 DOM 的频繁更新，提高性能。<br>Vue 的整个流程是可以绕过虚拟 DOM 实现的，接下来我将实现一个更加复杂的 vue 渲染 <code>.vue</code> 文件的流程。</li>
+</ul>
+<h2 id="完整流程"><a href="#完整流程" class="headerlink" title="完整流程"></a>完整流程</h2><p>以上是 vue 的一个简易版本，由于我认识有限，接下来的内容将会不断更新，以便还原整个 vue 文件运行的流程。</p>
+<h3 id="Vue-文件转为-Js-文件"><a href="#Vue-文件转为-Js-文件" class="headerlink" title=".Vue 文件转为. Js 文件"></a>.Vue 文件转为. Js 文件</h3><h3 id="CreateApp-入口函数"><a href="#CreateApp-入口函数" class="headerlink" title="CreateApp 入口函数"></a>CreateApp 入口函数</h3><h3 id="函件加载"><a href="#函件加载" class="headerlink" title="函件加载"></a>函件加载</h3><h2 id="虚拟-DOM"><a href="#虚拟-DOM" class="headerlink" title="虚拟 DOM"></a>虚拟 DOM</h2><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a class="link"   target="_blank" rel="noopener" href="https://jonny-wei.github.io/blog/vue/vue/vue-observer.html#%E5%A6%82%E4%BD%95%E4%BE%A6%E6%B5%8B%E6%95%B0%E6%8D%AE%E7%9A%84%E5%8F%98%E5%8C%96" >响应式原理<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://blog.poetries.top/FE-Interview-Questions/principle-docs/comprehensive/07-%E8%99%9A%E6%8B%9FDOM%EF%BC%88%E4%B8%80%EF%BC%89.html#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF-vdom" >什么是虚拟 DOM<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1L94y1U73p/?spm_id_from=333.788&vd_source=115cedcdb1996c6483fb453252e441e6" ># JS实现『从工程化到Vue』【上机题】<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1mK421v7PH?p=4&vd_source=115cedcdb1996c6483fb453252e441e6" ># 【小野森森】虚拟DOM怎么了？【前端基础】<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+</ul>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> VUE是如何渲染SFC的</li>
+        <li><strong>Author:</strong> PinaPop</li>
+        <li><strong>Created at
+                :</strong> 2024-09-28 13:35:52</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2024-12-30 09:29:38
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://2417357623.github.io/myBlog/2024/09/28/VUE是如何渲染SPA的/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/myBlog/tags/Vue/">#Vue</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/myBlog/tags/SFC/">#SFC</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/myBlog/tags/%E6%B8%B2%E6%9F%93%E5%8E%9F%E7%90%86/">#渲染原理</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/myBlog/tags/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/">#前端开发</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/myBlog/2024/10/13/%E8%81%8A%E8%81%8A%E5%89%8D%E7%AB%AF%E7%BC%93%E5%AD%98/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">聊聊前端缓存</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/myBlog/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+          recaptchaV3Key: "wasd",
+          
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">VUE是如何渲染SFC的</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%89%E5%8F%8A%E5%88%B0%E7%9A%84%E7%9F%A5%E8%AF%86%E9%9D%A2"><span class="nav-text">涉及到的知识面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E6%98%93%E6%B5%81%E7%A8%8B%E5%8A%A0%E8%99%9A%E6%8B%9F-DOM"><span class="nav-text">简易流程加虚拟 DOM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SFC%E8%BD%AC%E4%B8%BAJS"><span class="nav-text">SFC转为JS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#template%E6%A8%A1%E6%9D%BF%E5%88%86%E6%9E%90%EF%BC%8C%E7%BC%96%E8%AF%91"><span class="nav-text">template模板分析，编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#render%E8%99%9A%E6%8B%9FDOM"><span class="nav-text">render虚拟DOM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%9B%B4%E6%96%B0%EF%BC%8C%E9%87%8D%E6%96%B0%E6%B8%B2%E6%9F%93"><span class="nav-text">数据更新，重新渲染</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%B0%8F%E7%BB%93"><span class="nav-text">流程小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B"><span class="nav-text">完整流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-%E6%96%87%E4%BB%B6%E8%BD%AC%E4%B8%BA-Js-%E6%96%87%E4%BB%B6"><span class="nav-text">.Vue 文件转为. Js 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CreateApp-%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0"><span class="nav-text">CreateApp 入口函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E4%BB%B6%E5%8A%A0%E8%BD%BD"><span class="nav-text">函件加载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F-DOM"><span class="nav-text">虚拟 DOM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">参考资料</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2024&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/myBlog/">PinaPop</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        15 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.2</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/myBlog/js/build/libs/Swup.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/myBlog/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/myBlog/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/myBlog/js/build/utils.js" type="module"></script>
+
+<script src="/myBlog/js/build/main.js" type="module"></script>
+
+<script src="/myBlog/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/myBlog/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/myBlog/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/myBlog/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/myBlog/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/myBlog/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/myBlog/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/myBlog/js/build/tools/runtime.js"></script>
+
+    
+<script src="/myBlog/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/myBlog/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/myBlog/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/myBlog/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/myBlog/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/myBlog/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/myBlog/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/myBlog/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/myBlog/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/myBlog/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>
